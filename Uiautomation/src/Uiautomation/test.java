@@ -24,10 +24,12 @@ public class test {
 	public static String connectip;
 	public static String linuxapkpath;
 	public static String devicescount;
+	public static String systemPorts;
+
 
 	public static void testmethod() throws FileNotFoundException, IOException {
 		Properties pps = new Properties();
-		pps.load(new FileInputStream("Test.properties"));
+		pps.load(new FileInputStream("Test-zs.properties"));
 		Enumeration enum1 = pps.propertyNames();// 得到配置文件名
 		while (enum1.hasMoreElements()) {
 			String strKey = (String) enum1.nextElement();
@@ -82,6 +84,9 @@ public class test {
 			}
 			if (strKey.equals("devicescount")) {
 				devicescount = strValue;
+			}
+			if (strKey.equals("systemPort")) {
+				systemPorts = strValue;
 			}
 		}
 	}
