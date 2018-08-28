@@ -39,11 +39,11 @@ public class testData {
 	IdCardGenerator g = new IdCardGenerator();
   test test1=new test();
  		
-public void setNowNumber(String caseName) 
+public void setNowNumber(String caseName,String devicesName)
 {	
-	//rowNumber = i;
 	String result2= test1.str3;
-	String excelPath=result2+"测试相关数据"+".xlsx";	
+//	String excelPath=result2+devicesName+"测试相关数据"+".xlsx";
+	String excelPath=result2+"测试相关数据"+".xlsx";
 	String value;
 	File file = new File(excelPath);
 	int totalRowNumber;
@@ -86,13 +86,14 @@ public void setNowNumber(String caseName)
 	
 }
 
-public String getTestData(String dataType) throws IOException{
+public String getTestData(String dataType,String device) throws IOException{
 
 	try
 	{
 		test.testmethod();
 		String result2= test1.str3;
-		String excelPath=result2+"测试相关数据"+".xlsx";	
+//		String excelPath=result2+device+"测试相关数据"+".xlsx";
+		String excelPath=result2+"测试相关数据"+".xlsx";
 		File file = new File(excelPath);
 		
 		InputStream inputStream = new FileInputStream(file);
@@ -125,7 +126,7 @@ public String getTestData(String dataType) throws IOException{
 	return getData;
 }
 
-public String computAndGetData(String dataType) throws IOException
+public String computAndGetData(String dataType,String device) throws IOException
 {
 	String acountedValue="";
 	int chongzb_kj, jianglib_kj;
@@ -133,51 +134,51 @@ public String computAndGetData(String dataType) throws IOException
 	switch (dataType)
 	{
 	case "折扣数量":
-		totalOriginalCost = getTestData("章节总原价");
-		discountRate = getTestData("最终折扣率");
+		totalOriginalCost = getTestData("章节总原价",device);
+		discountRate = getTestData("最终折扣率",device);
 		acountedValue = computeDiscountAmount(totalOriginalCost,discountRate);
 		break;
 	case "最终折扣率":
-		String specialUserRate = getTestData("特权用户折扣率");
+		String specialUserRate = getTestData("特权用户折扣率",device);
 		if(specialUserRate.equals(""))
 		{
 			specialUserRate = "8.0";//如果数据文件中没有配置特权用户的折扣率，默认将其设为8.0折
 		}
 
-		String nomalUserRate = getTestData("一般折扣率");
-		acountedValue = computeDiscountRate(specialUserRate,nomalUserRate);
+		String nomalUserRate = getTestData("一般折扣率",device);
+		acountedValue = computeDiscountRate(specialUserRate,nomalUserRate,device);
 		break;
 	case "章节总折后价":
 
-		totalOriginalCost = getTestData("章节总原价");
+		totalOriginalCost = getTestData("章节总原价",device);
 		if(appType.equalsIgnoreCase("KJ")) //对于开卷项目来说，如果为会员账户，且数据文件中的最终折扣率未配置，则将其设为默认的8折，且回写到数据文件中
 		{
-			if(getTestData("是否特权用户").equals("未开通")) //非会员账号，无折扣
+			if(getTestData("是否特权用户",device).equals("未开通")) //非会员账号，无折扣
 			{
 				discountRate = "10.0";
-				setTestData("最终折扣率", "无折扣");
+				setTestData("最终折扣率", "无折扣",device);
 			}
-			else if(getTestData("最终折扣率").equals(""))
+			else if(getTestData("最终折扣率",device).equals(""))
 			{
 				discountRate = "8.0";
-				setTestData("最终折扣率", discountRate);
+				setTestData("最终折扣率", discountRate,device);
 			}
 			else //如果账户折扣率已经做了配置，取其配置的值
 			{
-				discountRate = getTestData("最终折扣率");
+				discountRate = getTestData("最终折扣率",device);
 			}
 		}
 		else
 		{
-			discountRate = getTestData("最终折扣率");
+			discountRate = getTestData("最终折扣率",device);
 		}
 
 		acountedValue = computeActualCost(totalOriginalCost,discountRate);
 		break;
 	case "开卷_总书币":
 
-		chongzb_kj = getNonQianfValue(getTestData("开卷_充值书币")); //从数据文件中"开卷_充值书币"列取出信息，并去掉千分位
-		jianglib_kj = getNonQianfValue(getTestData("开卷_奖励书币"));
+		chongzb_kj = getNonQianfValue(getTestData("开卷_充值书币",device)); //从数据文件中"开卷_充值书币"列取出信息，并去掉千分位
+		jianglib_kj = getNonQianfValue(getTestData("开卷_奖励书币",device));
 		acountedValue = getQianfValue(chongzb_kj+jianglib_kj); //将充值书币于奖励书币相加，并转换位千分位的形式
 		break;
 	
@@ -188,7 +189,8 @@ public String computAndGetData(String dataType) throws IOException
 	try {
 		test.testmethod();
 		String result2= test1.str3;
-		String excelPath=result2+"测试相关数据"+".xlsx";	
+//		String excelPath=result2+device+"测试相关数据"+".xlsx";
+		String excelPath=result2+"测试相关数据"+".xlsx";
 		File file = new File(excelPath);
 		InputStream fis = new FileInputStream(file);
 		OPCPackage opcPackage = OPCPackage.open(fis);
@@ -224,7 +226,7 @@ public String computeDiscountAmount(String totalOriginalCost,String discountRate
 	return acountedValue;
 }
 //计算购买章节时最后的折扣率
-public String computeDiscountRate(String specialUserRate,String nomalUserRate) throws IOException
+public String computeDiscountRate(String specialUserRate,String nomalUserRate,String device) throws IOException
 {
 	String acountedValue="", ifSpectialUserText = "", filterdNURate="";
 	float a, b;
@@ -233,7 +235,7 @@ public String computeDiscountRate(String specialUserRate,String nomalUserRate) t
 		ifSpectialUserText = "到期"; //追书项目下，特权用户的显示信息为“已包月”
 	}
 
-	if(getTestData("是否特权用户").trim().contains(ifSpectialUserText)) //如果为特权用户，最后的折扣率 = 一般用户折扣率*特权用户折扣率
+	if(getTestData("是否特权用户",device).trim().contains(ifSpectialUserText)) //如果为特权用户，最后的折扣率 = 一般用户折扣率*特权用户折扣率
 	{
 		a=(float) ((Float.parseFloat(specialUserRate))*0.1); 
 	}
@@ -267,13 +269,14 @@ public String computeActualCost(String totalOrigCost,String discountRate) throws
 	return acountedValue;
 }
 //将所有的列号与列名的对应关系，放入一个哈希表，方便后续代码可以通过列名直接找到对应的列号信息
-public void getColFromDataFiles() throws IOException{
+public void getColFromDataFiles(String device) throws IOException{
 
 	try
 	{
 		test.testmethod();
 		String result2= test1.str3;
-		String excelPath=result2+"测试相关数据"+".xlsx";	
+//		String excelPath=result2+device+"测试相关数据"+".xlsx";
+		String excelPath=result2+"测试相关数据"+".xlsx";
 		String colName;
 		File file = new File(excelPath);
 		
@@ -373,17 +376,17 @@ public  void SetNewPhone(){
 
 }
 //传入要检查的余额类型，根据app的显示规则，返回要不要在页面上显示该字段信息的判断值
-boolean  getIfDispMHD(String checkType)
+boolean  getIfDispMHD(String checkType,String device)
 {
 	boolean ifDisplayed = true;
 	String ifMhqSupported;
 	int amountMHQ, amountDD, zongZhj;
 
 	try {
-		ifMhqSupported = getTestData("漫画岛_是否支持漫画券");
-		amountMHQ = Integer.parseInt(getTestData("漫画岛_漫画券余额"));
-		amountDD = Integer.parseInt(getTestData("漫画岛_岛蛋余额"));
-		zongZhj = Integer.parseInt(getTestData("章节总折后价"));
+		ifMhqSupported = getTestData("漫画岛_是否支持漫画券",device);
+		amountMHQ = Integer.parseInt(getTestData("漫画岛_漫画券余额",device));
+		amountDD = Integer.parseInt(getTestData("漫画岛_岛蛋余额",device));
+		zongZhj = Integer.parseInt(getTestData("章节总折后价",device));
 		if(checkType.trim().equals("漫画岛_岛蛋余额"))
 		{
 			if(ifMhqSupported.equalsIgnoreCase("Y") && (amountMHQ >= zongZhj)) //如果支持漫画券支付，且剩余漫画券余额大于等于总的折后价格，页面上不显示岛蛋余额
@@ -408,13 +411,14 @@ boolean  getIfDispMHD(String checkType)
 	}
 	return ifDisplayed;
 }
-public  String setTestData(String testDataType, String readedText)
+public  String setTestData(String testDataType, String readedText,String devices)
 {
 
 	try {
 		//test.testmethod();
 		String result2= test1.str3;
-		String excelPath=result2+"测试相关数据"+".xlsx";	
+//		String excelPath=result2+devices+"测试相关数据"+".xlsx";
+		String excelPath=result2+"测试相关数据"+".xlsx";
 		File file = new File(excelPath);
 		InputStream fis = new FileInputStream(file);
 		OPCPackage opcPackage = OPCPackage.open(fis);
@@ -441,7 +445,7 @@ public  String setTestData(String testDataType, String readedText)
 	return readedText;
 }
 //追书购买章节计算，并将计算结果写入数据文件
-public  String buyAccoutingZS()
+public  String buyAccoutingZS(String device)
 {
 	
 	String resultMessage = "", ifShudouSupported;
@@ -450,24 +454,24 @@ public  String buyAccoutingZS()
 	int currentZhangJieHao, nextZhangJieHao;//本次要购买的起始章节号，下次要购买的其实章节号
 	String zhangjieShu; //本次购买的章节数
 	try {
-		ifShudouSupported = getTestData("追书_是否支持书豆");
-		origShubiAmount = Integer.parseInt(getTestData("追书_书币余额"));
-		origShuQuanAmount = Integer.parseInt(getTestData("追书_书券余额"));
-		origShudouAmount = Integer.parseInt(getTestData("追书_书豆余额"));
-		shifuAmount = Integer.parseInt(getTestData("章节总折后价"));
+		ifShudouSupported = getTestData("追书_是否支持书豆",device);
+		origShubiAmount = Integer.parseInt(getTestData("追书_书币余额",device));
+		origShuQuanAmount = Integer.parseInt(getTestData("追书_书券余额",device));
+		origShudouAmount = Integer.parseInt(getTestData("追书_书豆余额",device));
+		shifuAmount = Integer.parseInt(getTestData("章节总折后价",device));
 		if(ifShudouSupported.equals("本书不支持追书豆")) //如果不支持书豆，则通过书券与书币余额进行扣减
 		{
 			if(origShuQuanAmount >= shifuAmount) //如果书券金额大于实际购买金额，直接扣减书券
 			{
 				newShuQuanAmount = origShuQuanAmount - shifuAmount;
-				setTestData("追书_书券余额", Integer.toString(newShuQuanAmount));
+				setTestData("追书_书券余额", Integer.toString(newShuQuanAmount),device);
 			}
 			else if((origShuQuanAmount < shifuAmount) && ((origShuQuanAmount+origShubiAmount) >= shifuAmount)) //书券余额<如果实际购买金额<=（书券余额+书币余额），先将书券扣减到0，再扣减书币
 			{
 				newShuQuanAmount = 0;
-				setTestData("追书_书券余额", "0");
+				setTestData("追书_书券余额", "0",device);
 				newShubiAmount = origShuQuanAmount+origShubiAmount - shifuAmount;
-				setTestData("追书_书币余额", Integer.toString(newShubiAmount));
+				setTestData("追书_书币余额", Integer.toString(newShubiAmount),device);
 			}
 			else
 			{
@@ -479,23 +483,23 @@ public  String buyAccoutingZS()
 			if(origShudouAmount >= shifuAmount)
 			{
 				newShudouAmount = origShudouAmount - shifuAmount;
-				setTestData("追书_书豆余额", Integer.toString(newShudouAmount));
+				setTestData("追书_书豆余额", Integer.toString(newShudouAmount),device);
 			}
 			else if((origShudouAmount+origShuQuanAmount) >= shifuAmount)
 			{
 				newShudouAmount = 0;
-				setTestData("追书_书豆余额", "0");
+				setTestData("追书_书豆余额", "0",device);
 				newShuQuanAmount = origShudouAmount+origShuQuanAmount - shifuAmount;
-				setTestData("追书_书券余额", Integer.toString(newShuQuanAmount));
+				setTestData("追书_书券余额", Integer.toString(newShuQuanAmount),device);
 			}
 			else if((origShudouAmount+origShuQuanAmount+origShubiAmount) >= shifuAmount)
 			{
 				newShudouAmount = 0;
-				setTestData("追书_书豆余额", "0");
+				setTestData("追书_书豆余额", "0",device);
 				newShuQuanAmount = 0;
-				setTestData("追书_书券余额", "0");
+				setTestData("追书_书券余额", "0",device);
 				newShubiAmount = origShudouAmount+origShuQuanAmount+origShubiAmount - shifuAmount;
-				setTestData("追书_书币余额", Integer.toString(newShubiAmount));
+				setTestData("追书_书币余额", Integer.toString(newShubiAmount),device);
 			}
 			else
 			{
@@ -503,8 +507,8 @@ public  String buyAccoutingZS()
 			}
 		}
 		//计算数据文件中下一个需要购买的章节号
-		currentZhangJieHao = Integer.parseInt(getTestData("购买章节"));
-		zhangjieShu = getTestData("章节数量");
+		currentZhangJieHao = Integer.parseInt(getTestData("购买章节",device));
+		zhangjieShu = getTestData("章节数量",device);
 		if(zhangjieShu.equals("本章"))
 		{
 			nextZhangJieHao = currentZhangJieHao +1;
@@ -513,7 +517,7 @@ public  String buyAccoutingZS()
 		{
 			nextZhangJieHao = currentZhangJieHao + Integer.parseInt(warpingFunctions.getFiltedText(zhangjieShu, "后/章"));
 		}
-		setTestData("购买章节", Integer.toString(nextZhangJieHao));
+		setTestData("购买章节", Integer.toString(nextZhangJieHao),device);
 		
 	} catch (Exception e) {
 		resultMessage=e.getMessage();
@@ -521,7 +525,7 @@ public  String buyAccoutingZS()
 	return resultMessage;
 }
 //开卷购买章节计算，并将计算结果写入数据文件
-public  String buyAccoutingKJ()
+public  String buyAccoutingKJ(String device)
 {
 	
 	String resultMessage = "", ifJiangliSupported;
@@ -531,18 +535,18 @@ public  String buyAccoutingKJ()
 	int currentZhangJieHao, nextZhangJieHao;//本次要购买的起始章节号，下次要购买的其实章节号
 	String zhangjieShu; //本次购买的章节数
 	try {
-		ifJiangliSupported = getTestData("开卷_奖励书币是否可用");
-		origChongzAmount = getNonQianfValue(getTestData("开卷_充值书币")); //开卷项目中要对充值书币/奖励书币/总书币的存取进行千分位的处理，后同
-		origJiangliAmount = getNonQianfValue(getTestData("开卷_奖励书币"));
-		shifuAmount = Integer.parseInt(getTestData("章节总折后价"));
+		ifJiangliSupported = getTestData("开卷_奖励书币是否可用",device);
+		origChongzAmount = getNonQianfValue(getTestData("开卷_充值书币",device)); //开卷项目中要对充值书币/奖励书币/总书币的存取进行千分位的处理，后同
+		origJiangliAmount = getNonQianfValue(getTestData("开卷_奖励书币",device));
+		shifuAmount = Integer.parseInt(getTestData("章节总折后价",device));
 		if(ifJiangliSupported.equals("奖励书币余额不可用")) //如果奖励书币不可用，则通过充值书币余额进行扣减
 		{
 			if(origChongzAmount >= shifuAmount) //如果书券金额大于实际购买金额，直接扣减书券
 			{
 				newChongzAmount = origChongzAmount - shifuAmount;
-				setTestData("开卷_充值书币", getQianfValue(newChongzAmount));
+				setTestData("开卷_充值书币", getQianfValue(newChongzAmount),device);
 				newTotalAmount = newChongzAmount + origJiangliAmount;
-				setTestData("开卷_总书币", getQianfValue(newTotalAmount));
+				setTestData("开卷_总书币", getQianfValue(newTotalAmount),device);
 			}
 			else
 			{
@@ -554,18 +558,18 @@ public  String buyAccoutingKJ()
 			if(origJiangliAmount >= shifuAmount)
 			{
 				newJiangliAmount = origJiangliAmount - shifuAmount;
-				setTestData("开卷_奖励书币", getQianfValue(newJiangliAmount));
+				setTestData("开卷_奖励书币", getQianfValue(newJiangliAmount),device);
 				newTotalAmount = origChongzAmount + newJiangliAmount;
-				setTestData("开卷_总书币", getQianfValue(newTotalAmount));
+				setTestData("开卷_总书币", getQianfValue(newTotalAmount),device);
 			}
 			else if((origJiangliAmount+origChongzAmount) >= shifuAmount)
 			{
 				newJiangliAmount = 0;
-				setTestData("开卷_奖励书币", "0");
+				setTestData("开卷_奖励书币", "0",device);
 				newChongzAmount = origJiangliAmount+origChongzAmount - shifuAmount;
-				setTestData("开卷_充值书币", getQianfValue(newChongzAmount));
+				setTestData("开卷_充值书币", getQianfValue(newChongzAmount),device);
 				newTotalAmount = newChongzAmount + newJiangliAmount;
-				setTestData("开卷_总书币", getQianfValue(newTotalAmount));
+				setTestData("开卷_总书币", getQianfValue(newTotalAmount),device);
 			}
 			else
 			{
@@ -574,8 +578,8 @@ public  String buyAccoutingKJ()
 		}
 
 		//计算数据文件中下一个需要购买的章节号
-		currentZhangJieHao = Integer.parseInt(getTestData("购买章节"));
-		zhangjieShu = getTestData("章节数量");
+		currentZhangJieHao = Integer.parseInt(getTestData("购买章节",device));
+		zhangjieShu = getTestData("章节数量",device);
 		if(zhangjieShu.equals("单章购买"))
 		{
 			nextZhangJieHao = currentZhangJieHao +1;
@@ -584,7 +588,7 @@ public  String buyAccoutingKJ()
 		{
 			nextZhangJieHao = currentZhangJieHao + Integer.parseInt(warpingFunctions.getFiltedText(zhangjieShu, "购买/章"));
 		}
-		setTestData("购买章节", Integer.toString(nextZhangJieHao));
+		setTestData("购买章节", Integer.toString(nextZhangJieHao),device);
 		
 	} catch (Exception e) {
 		resultMessage=e.getMessage();
@@ -592,7 +596,7 @@ public  String buyAccoutingKJ()
 	return resultMessage;
 }
 //漫画岛购买章节计算，并将计算结果写入数据文件
-public  String buyAccoutingMHD()
+public  String buyAccoutingMHD(String device)
 {
 	
 	String resultMessage = "", ifMHQSupported;
@@ -601,16 +605,16 @@ public  String buyAccoutingMHD()
 	int currentZhangJieHao, nextZhangJieHao = 0;//本次要购买的起始章节号，下次要购买的其实章节号
 	String zhangjieShu; //本次购买的章节数
 	try {
-		ifMHQSupported = getTestData("漫画岛_是否支持漫画券");
-		origDDAmount = Integer.parseInt(getTestData("漫画岛_岛蛋余额"));
-		origMHQAmount = Integer.parseInt(getTestData("漫画岛_漫画券余额"));
-		shifuAmount = Integer.parseInt(getTestData("章节总折后价"));
+		ifMHQSupported = getTestData("漫画岛_是否支持漫画券",device);
+		origDDAmount = Integer.parseInt(getTestData("漫画岛_岛蛋余额",device));
+		origMHQAmount = Integer.parseInt(getTestData("漫画岛_漫画券余额",device));
+		shifuAmount = Integer.parseInt(getTestData("章节总折后价",device));
 		if(ifMHQSupported.trim().equals("N")) //数据文件中指明漫画券不可用，则通过岛蛋余额进行扣减
 		{
 			if(origDDAmount >= shifuAmount) //如果岛蛋金额大于实际购买金额，直接扣减岛蛋余额
 			{
 				newDDAmount = origDDAmount - shifuAmount;
-				setTestData("漫画岛_岛蛋余额", Integer.toString(newDDAmount));
+				setTestData("漫画岛_岛蛋余额", Integer.toString(newDDAmount),device);
 			}
 			else
 			{
@@ -622,14 +626,14 @@ public  String buyAccoutingMHD()
 			if(origMHQAmount >= shifuAmount)
 			{
 				newMHQAmount = origMHQAmount - shifuAmount;
-				setTestData("漫画岛_漫画券余额", Integer.toString(newMHQAmount));
+				setTestData("漫画岛_漫画券余额", Integer.toString(newMHQAmount),device);
 			}
 			else if((origMHQAmount+origDDAmount) >= shifuAmount)
 			{
 				newMHQAmount = 0;
-				setTestData("漫画岛_漫画券余额", "0");
+				setTestData("漫画岛_漫画券余额", "0",device);
 				newDDAmount = origMHQAmount+origDDAmount - shifuAmount;
-				setTestData("漫画岛_岛蛋余额", Integer.toString(newDDAmount));
+				setTestData("漫画岛_岛蛋余额", Integer.toString(newDDAmount),device);
 			}
 			else
 			{
@@ -638,8 +642,8 @@ public  String buyAccoutingMHD()
 		}
 
 		//计算数据文件中下一个需要购买的章节号
-		currentZhangJieHao = Integer.parseInt(getTestData("购买章节"));
-		zhangjieShu = getTestData("章节数量");
+		currentZhangJieHao = Integer.parseInt(getTestData("购买章节",device));
+		zhangjieShu = getTestData("章节数量",device);
 		if(zhangjieShu.contains("本话"))
 		{
 			nextZhangJieHao = currentZhangJieHao +1;
@@ -648,7 +652,7 @@ public  String buyAccoutingMHD()
 		{
 			nextZhangJieHao = currentZhangJieHao + Integer.parseInt(warpingFunctions.getFiltedText(zhangjieShu, "后/话"));
 		}
-		setTestData("购买章节", Integer.toString(nextZhangJieHao));
+		setTestData("购买章节", Integer.toString(nextZhangJieHao),device);
 		
 	} catch (Exception e) {
 		resultMessage=e.getMessage();
