@@ -86,7 +86,7 @@ public class singleCaseProcess {
                     value[j] = row.getCell(j).getStringCellValue().trim();// 操作类型
                 }
                 try {
-                    stepExec = warpingFunctions.getIfCaseExec(driver, value[0], value[3], stepExec); // 判断该步骤是否需要执行。
+                    stepExec = warpingFunctions.getIfCaseExec(driver, value[0], value[3], stepExec,value[2],value[1]); // 判断该步骤是否需要执行。
 
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
@@ -115,12 +115,17 @@ public class singleCaseProcess {
                     //切换至H5
                     if (value[6]!=null&&!value[6].equals("")){
                         if (value[6].equals("H5")||value[6].equals("h5")){
-                            driver.context(webviewApp);
-                            System.out.println("切换到webview：" + webviewApp);
+                            if (webviewApp!=null&&!webviewApp.equals("")){
+                                driver.context(webviewApp);
+                                System.out.println("切换到webview：" + webviewApp);
+                            }
                         }
                     }
 
                     switch (value[0]) {
+
+
+
                         case "if_文本包含":
                             excel.writeResult(value[4], resultMessage, executeDevicename);// 写入单个测试用例单个步骤的执行结果
                             break;
@@ -1139,8 +1144,11 @@ public class singleCaseProcess {
                     //切换至原生
                     if (value[6]!=null&&!value[6].equals("")) {
                         if (value[6].equals("H5") || value[6].equals("h5")) {
-                            driver.context(nativeApp);
-                            System.out.println("切换到nativeApp：" + nativeApp);
+                            if (nativeApp!=null&&!nativeApp.equals("")){
+
+                                driver.context(nativeApp);
+                                System.out.println("切换到nativeApp：" + nativeApp);
+                            }
                         }
                     }
                     if (resultMessage.length() == 0) {
