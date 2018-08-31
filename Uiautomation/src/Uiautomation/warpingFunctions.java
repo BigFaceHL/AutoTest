@@ -151,15 +151,13 @@ public class warpingFunctions {
 			// (2)若页面中不包含字段containedValue，则后续的用例步骤都不执行；直到出现新的逻辑判断步骤包含在value【0】中
 			if (oprType.contains("文本包含")) {
 				try {
-
 					totalText = driver.getPageSource();
-					
-					System.out.println(containedValue);
 					int k = 0;
 					while (k < 3) {
 						if (totalText.contains(containedValue)) {
 							stepExec = true;
 							ever_True = true;
+							System.out.println("页面包括该内容："+containedValue);
 							break;
 						} else {
 							try {
@@ -194,7 +192,7 @@ public class warpingFunctions {
 						break;
 					} else {
 						try {
-							Thread.sleep(3000);
+							Thread.sleep(2000);
 						} catch (InterruptedException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -204,6 +202,7 @@ public class warpingFunctions {
 					}
 				}
 				if (j == 3) {
+					System.out.println("页面不包括该内容："+containedValue);
 					stepExec = true;
 					ever_True = true;
 				}

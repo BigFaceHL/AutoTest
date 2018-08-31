@@ -112,8 +112,9 @@ class RunnableDemo implements Runnable {
             capabilities.setCapability("resetKeyboard", "true");
             capabilities.setCapability("noReset", "true");
             capabilities.setCapability("noSign", "true");
+            capabilities.setCapability("chromedriverExecutableDir", "C:\\Users\\Administrator\\AppData\\Roaming\\npm\\node_modules\\appium\\node_modules\\appium-chromedriver\\chromedriver\\win");
             //运行时权限（自动接受所有的权限）
-			capabilities.setCapability("autoGrantPermissions", "true");
+            capabilities.setCapability("autoGrantPermissions", "true");
             // 配置连接的设备信息(uiautomator2)
             capabilities.setCapability("automationName", "UiAutomator2");
             capabilities.setCapability("systemPort", systemPort);
@@ -216,7 +217,7 @@ class runAutomation {
                             platformVersion, appPaths, connectip[i], linuxapkpath,systemPorts[j]);
                     executedevices[j].start();
                     try {
-                        TimeUnit.SECONDS.sleep(5);
+                        TimeUnit.SECONDS.sleep(3);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
