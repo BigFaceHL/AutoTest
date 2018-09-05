@@ -73,12 +73,12 @@ public class FileUtil {
 		String result3 = test1.str5;
 		// 创建日期名称的文件夹
 		// String
-		// picDir="F:\\测试报告\\截图日志"+String.valueOf(dateUtil.getYear(date))+"-"+String.valueOf(dateUtil.getMonth(date))+"-"+String.valueOf(dateUtil.getDay(date));
-		String picDir = result3 + "截图日志" + String.valueOf(dateUtil.getYear(date)) + "-" + String.valueOf(dateUtil.getMonth(date)) + "-" + String.valueOf(dateUtil.getDay(date));
+		// picDir="F:\\测试报告\\截图日志"+String.valueOf(DateUtil.getYear(date))+"-"+String.valueOf(DateUtil.getMonth(date))+"-"+String.valueOf(DateUtil.getDay(date));
+		String picDir = result3 + "截图日志" + String.valueOf(DateUtil.getYear(date)) + "-" + String.valueOf(DateUtil.getMonth(date)) + "-" + String.valueOf(DateUtil.getDay(date));
 		FileUtil.createDir(picDir);
 
 		// 时间名称的截图文件
-		filePath = picDir + "\\" + String.valueOf(dateUtil.getHour(date)) + "-" + String.valueOf(dateUtil.getMinute(date)) + "-" + String.valueOf(dateUtil.getSecond(date)) + ".png";
+		filePath = picDir + "\\" + String.valueOf(DateUtil.getHour(date)) + "-" + String.valueOf(DateUtil.getMinute(date)) + "-" + String.valueOf(DateUtil.getSecond(date)) + ".png";
 
 		File srcFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 		try {
