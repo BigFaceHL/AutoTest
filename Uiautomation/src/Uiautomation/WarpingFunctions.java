@@ -24,7 +24,7 @@ import io.appium.java_client.android.AndroidDriver;
 
 import org.openqa.selenium.firefox.FirefoxProfile;
 
-public class warpingFunctions {
+public class WarpingFunctions {
     public static boolean ever_True = false; // 用于在对if-else句式进行解析时，记录之前是否已经有过条件被满足，特定步骤被执行的情况
 
     public static FirefoxProfile downloadAttachments() {
