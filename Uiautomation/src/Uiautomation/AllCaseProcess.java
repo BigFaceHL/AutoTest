@@ -27,11 +27,11 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.Select;
 
-import Uiautomation.excelOperation;
-import Uiautomation.dateUtil;
+import Uiautomation.ExcelOperation;
+import Uiautomation.DateUtil;
 import Uiautomation.test;
 
-public class allCaseProcess {
+public class AllCaseProcess {
   private WebDriver driver;
   private String baseUrl;
   private boolean acceptNextAlert = true;
@@ -46,7 +46,7 @@ public class allCaseProcess {
 
   test test1=new test();
   //createExcel excelall = new createExcel();
-	excelOperation eOP = new excelOperation();
+	ExcelOperation eOP = new ExcelOperation();
 	
 public  void writeAllResult(String execResult, int i) {
 	try {
@@ -100,7 +100,7 @@ public void writeallHeader(String device) throws IOException{
 
 		 test1.testmethod();
 		 String result4= test1.str4;//获取测试报告的生成路径
-		 excelPath=result4+device+"-总体测试报告"+String.valueOf(dateUtil.getYear(eOP.date))+"-"+String.valueOf(dateUtil.getMonth(eOP.date))+"-"+String.valueOf(dateUtil.getDay(eOP.date))+"-"+String.valueOf(dateUtil.getHour(eOP.date))+"-"+String.valueOf(dateUtil.getMinute(eOP.date))+".xlsx";	
+		 excelPath=result4+device+"-总体测试报告"+String.valueOf(DateUtil.getYear(eOP.date))+"-"+String.valueOf(DateUtil.getMonth(eOP.date))+"-"+String.valueOf(DateUtil.getDay(eOP.date))+"-"+String.valueOf(DateUtil.getHour(eOP.date))+"-"+String.valueOf(DateUtil.getMinute(eOP.date))+".xlsx";	
 		Workbook workbook = new XSSFWorkbook();
 		Sheet sheet = workbook.createSheet("testdata1");
 		FileOutputStream outputStream = new FileOutputStream(excelPath);

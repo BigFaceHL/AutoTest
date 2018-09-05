@@ -24,7 +24,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class testData {
+public class TestData {
 	int rowNumber, colNumber; //本次测试用例在数据文件中的行号与列号
 	String caseName;
 	String phoneNumber;
@@ -250,7 +250,7 @@ public String computeDiscountRate(String specialUserRate,String nomalUserRate,St
 	}
 	else
 	{
-		filterdNURate = warpingFunctions.getFiltedText(nomalUserRate, "/折"); //从页面上的信息包含"*折"的字样，需要去掉“折”再进行计算
+		filterdNURate = WarpingFunctions.getFiltedText(nomalUserRate, "/折"); //从页面上的信息包含"*折"的字样，需要去掉“折”再进行计算
 		b=(float) ((Float.parseFloat(filterdNURate))*0.1);
 	}
 	float c = a*b*10;
@@ -515,7 +515,7 @@ public  String buyAccoutingZS(String device)
 		}
 		else
 		{
-			nextZhangJieHao = currentZhangJieHao + Integer.parseInt(warpingFunctions.getFiltedText(zhangjieShu, "后/章"));
+			nextZhangJieHao = currentZhangJieHao + Integer.parseInt(WarpingFunctions.getFiltedText(zhangjieShu, "后/章"));
 		}
 		setTestData("购买章节", Integer.toString(nextZhangJieHao),device);
 		
@@ -586,7 +586,7 @@ public  String buyAccoutingKJ(String device)
 		}
 		else
 		{
-			nextZhangJieHao = currentZhangJieHao + Integer.parseInt(warpingFunctions.getFiltedText(zhangjieShu, "购买/章"));
+			nextZhangJieHao = currentZhangJieHao + Integer.parseInt(WarpingFunctions.getFiltedText(zhangjieShu, "购买/章"));
 		}
 		setTestData("购买章节", Integer.toString(nextZhangJieHao),device);
 		
@@ -650,7 +650,7 @@ public  String buyAccoutingMHD(String device)
 		}
 		else
 		{
-			nextZhangJieHao = currentZhangJieHao + Integer.parseInt(warpingFunctions.getFiltedText(zhangjieShu, "后/话"));
+			nextZhangJieHao = currentZhangJieHao + Integer.parseInt(WarpingFunctions.getFiltedText(zhangjieShu, "后/话"));
 		}
 		setTestData("购买章节", Integer.toString(nextZhangJieHao),device);
 		

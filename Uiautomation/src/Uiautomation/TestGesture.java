@@ -12,7 +12,7 @@ import io.appium.java_client.MobileElement;
 import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidDriver;
 
-public class testGesture {
+public class TestGesture {
     String actualparameter;
     String actualelement;
     String returnMessage;

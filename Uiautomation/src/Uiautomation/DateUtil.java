@@ -2,7 +2,7 @@ package Uiautomation;
 import java.util.Date;
 //该类主要用于生成年，月，日，小时，分钟，和秒的信息，用于生成保存截图文件目录名和文件名
 
-public class dateUtil {
+public class DateUtil {
 	
 	/*
 	 * 格式化输出日期

@@ -25,7 +25,7 @@ import io.appium.java_client.android.AndroidDriver;
 /*
  * 获取Excel文件的内容,使用Workbook方式来读取excel，Excel文件的行号和列号都是从0开始的
  */
-public class singleCaseProcess {
+public class SingleCaseProcess {
     public static boolean a = true;
     boolean stepExec = true;
     public int caseSequence, maxWaitTime = 15;
@@ -38,10 +38,10 @@ public class singleCaseProcess {
     String appType; // app项目名称
     int regNewPhoneNumber = 0;
     List<WebElement> bot;
-    excelOperation excel = new excelOperation();
+    ExcelOperation excel = new ExcelOperation();
     test test1 = new test();
-    testData TD = new testData();
-    testGesture TG = new testGesture();
+    TestData TD = new TestData();
+    TestGesture TG = new TestGesture();
 
     public void setCaseSequence(String caseName, String devicesName) {
         // caseSequence = CSQ;
@@ -88,7 +88,7 @@ public class singleCaseProcess {
                     value[j] = row.getCell(j).getStringCellValue().trim();// 操作类型
                 }
                 try {
-                    stepExec = warpingFunctions.getIfCaseExec(driver, value[0], value[3], stepExec,value[2],value[1]); // 判断该步骤是否需要执行。
+                    stepExec = WarpingFunctions.getIfCaseExec(driver, value[0], value[3], stepExec,value[2],value[1]); // 判断该步骤是否需要执行。
 
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
@@ -126,7 +126,7 @@ public class singleCaseProcess {
 
                     switch (value[0]) {
 
-
+  
 
                         case "if_文本包含":
                             excel.writeResult(value[4], resultMessage, executeDevicename);// 写入单个测试用例单个步骤的执行结果
@@ -526,7 +526,7 @@ public class singleCaseProcess {
                                 }
 
                                 testDataType = value[3]; // 要获取的文本内容的类型，value[3]中的值应该与“测试相关数据.xlsx"文档中的标题行的信息相匹配;
-                                String filteredText = warpingFunctions.getFiltedText(readedText, value[5]);
+                                String filteredText = WarpingFunctions.getFiltedText(readedText, value[5]);
                                 TD.setTestData(testDataType, filteredText, executeDevicename);
                             } catch (Exception e) {
                                 resultMessage = e.getMessage();
@@ -546,7 +546,7 @@ public class singleCaseProcess {
                                 }
 
                                 testDataType = value[3]; // 要获取的文本内容的类型，value[3]中的值应该与“测试相关数据.xlsx"文档中的标题行的信息相匹配;
-                                String filteredText = warpingFunctions.getFiltedText(readedText, value[5]);
+                                String filteredText = WarpingFunctions.getFiltedText(readedText, value[5]);
                                 TD.setTestData(testDataType, filteredText, executeDevicename);
                             } catch (Exception e) {
                                 resultMessage = e.getMessage();
@@ -651,7 +651,7 @@ public class singleCaseProcess {
                                 wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(value[1])));
                                 actualValue = driver.findElement(By.xpath(value[1])).getText();
                                 expectedValue = value[5];
-                                checkResult = warpingFunctions.verifyTest(actualValue, expectedValue);
+                                checkResult = WarpingFunctions.verifyTest(actualValue, expectedValue);
                                 if (checkResult == "fail") {
                                     FileUtil.takeTakesScreenshot(driver);
                                     resultMessage = FileUtil.filePath;
@@ -677,7 +677,7 @@ public class singleCaseProcess {
                                 }
 
                                 expectedValue = value[5];
-                                checkResult = warpingFunctions.verifyTest(actualValue, expectedValue);
+                                checkResult = WarpingFunctions.verifyTest(actualValue, expectedValue);
                                 if (checkResult == "fail") {
                                     FileUtil.takeTakesScreenshot(driver);
                                     resultMessage = FileUtil.filePath;
@@ -708,7 +708,7 @@ public class singleCaseProcess {
                                 while (checkResult == "fail" && count < 3) {
                                     pageSourceString = driver.getPageSource(); // 获取页面pagesource
                                     Thread.sleep(2000);
-                                    checkResult = warpingFunctions.verifyContainTest(pageSourceString, checkedText, "y");
+                                    checkResult = WarpingFunctions.verifyContainTest(pageSourceString, checkedText, "y");
                                     count++;
                                 }
 
@@ -742,7 +742,7 @@ public class singleCaseProcess {
                                 while (checkResult == "fail" && count < 2) {
                                     pageSourceString = driver.getPageSource(); // 获取页面pagesource
                                     Thread.sleep(1000);
-                                    checkResult = warpingFunctions.verifyContainTest(pageSourceString, checkedText, "n");
+                                    checkResult = WarpingFunctions.verifyContainTest(pageSourceString, checkedText, "n");
                                     count++;
                                 }
                                 if (checkResult == "fail") {
@@ -780,7 +780,7 @@ public class singleCaseProcess {
                                 actualValue = smallText;
                                 expectedValue = smallText; // 默认情况下，假定校验成功，在期望结果与实际结果一样
 
-                                checkResult = warpingFunctions.verifyContainTest(bigText, smallText, "y");
+                                checkResult = WarpingFunctions.verifyContainTest(bigText, smallText, "y");
                                 if (checkResult == "fail") {
                                     FileUtil.takeTakesScreenshot(driver);
                                     resultMessage = FileUtil.filePath;
@@ -817,7 +817,7 @@ public class singleCaseProcess {
                                 actualValue = smallText;
                                 expectedValue = smallText; // 默认情况下，假定校验成功，在期望结果与实际结果一样
 
-                                checkResult = warpingFunctions.verifyContainTest(bigText, smallText, "y");
+                                checkResult = WarpingFunctions.verifyContainTest(bigText, smallText, "y");
                                 if (checkResult == "fail") {
                                     FileUtil.takeTakesScreenshot(driver);
                                     resultMessage = FileUtil.filePath;
@@ -854,7 +854,7 @@ public class singleCaseProcess {
                                 actualValue = "";
                                 expectedValue = ""; // 默认情况下，假定校验成功，在期望结果与实际结果一样
 
-                                checkResult = warpingFunctions.verifyContainTest(bigText, smallText, "n");
+                                checkResult = WarpingFunctions.verifyContainTest(bigText, smallText, "n");
                                 if (checkResult == "fail") {
                                     FileUtil.takeTakesScreenshot(driver);
                                     resultMessage = FileUtil.filePath;
@@ -891,7 +891,7 @@ public class singleCaseProcess {
                                 actualValue = "";
                                 expectedValue = ""; // 默认情况下，假定校验成功，在期望结果与实际结果一样
 
-                                checkResult = warpingFunctions.verifyContainTest(bigText, smallText, "n");
+                                checkResult = WarpingFunctions.verifyContainTest(bigText, smallText, "n");
                                 if (checkResult == "fail") {
                                     FileUtil.takeTakesScreenshot(driver);
                                     resultMessage = FileUtil.filePath;
@@ -943,7 +943,7 @@ public class singleCaseProcess {
                                 actualValue = smallText;
                                 expectedValue = smallText; // 默认情况下，假定校验成功，在期望结果与实际结果一样
 
-                                checkResult = warpingFunctions.verifyContainTest(bigText, smallText, "y");
+                                checkResult = WarpingFunctions.verifyContainTest(bigText, smallText, "y");
                                 if (checkResult == "fail") {
                                     FileUtil.takeTakesScreenshot(driver);
                                     resultMessage = FileUtil.filePath;
@@ -969,7 +969,7 @@ public class singleCaseProcess {
 
                                 int actualValue = totalString;
                                 int expectedValue = totalString; // 默认情况下，假定校验成功，在期望结果与实际结果一样
-                                checkResult = warpingFunctions.comment(comment2, totalString);
+                                checkResult = WarpingFunctions.comment(comment2, totalString);
                                 if (checkResult == "fail") {
                                     FileUtil.takeTakesScreenshot(driver);
                                     resultMessage = FileUtil.filePath;
@@ -997,7 +997,7 @@ public class singleCaseProcess {
                                 if (ifDisplayed == true) {
                                     actualValue = smallText;
                                     expectedValue = smallText; // 默认情况下，假定校验成功，在期望结果与实际结果一样
-                                    checkResult = warpingFunctions.verifyContainTest(bigText, smallText, "y");
+                                    checkResult = WarpingFunctions.verifyContainTest(bigText, smallText, "y");
                                     if (checkResult == "fail") {
                                         FileUtil.takeTakesScreenshot(driver);
                                         resultMessage = FileUtil.filePath;
@@ -1036,7 +1036,7 @@ public class singleCaseProcess {
                                 actualValue = smallText;
                                 expectedValue = smallText; // 默认情况下，假定校验成功，在期望结果与实际结果一样
 
-                                checkResult = warpingFunctions.verifyContainTest(bigText, smallText, "y");
+                                checkResult = WarpingFunctions.verifyContainTest(bigText, smallText, "y");
                                 if (checkResult == "fail") {
                                     FileUtil.takeTakesScreenshot(driver);
                                     resultMessage = FileUtil.filePath;
@@ -1059,7 +1059,7 @@ public class singleCaseProcess {
                                 checkResult = "fail";
                                 while (waitItem < 24 && checkResult == "fail") {
                                     Thread.sleep(5000);
-                                    checkResult = warpingFunctions.verifyContainTest(pageSourceString, value[3], "y");
+                                    checkResult = WarpingFunctions.verifyContainTest(pageSourceString, value[3], "y");
                                     waitItem = waitItem + 1;
                                     pageSourceString = driver.getPageSource(); // 再次获取页面pagesource
                                 }
@@ -1100,7 +1100,7 @@ public class singleCaseProcess {
                                 wait.until(ExpectedConditions.presenceOfElementLocated(By.className(value[1])));
                                 actualValue = driver.findElement(By.className(value[1])).getText();
                                 expectedValue = value[5];
-                                checkResult = warpingFunctions.verifyTest(actualValue, expectedValue);
+                                checkResult = WarpingFunctions.verifyTest(actualValue, expectedValue);
                                 if (checkResult == "fail") {
                                     FileUtil.takeTakesScreenshot(driver);
                                     resultMessage = FileUtil.filePath;
@@ -1185,8 +1185,8 @@ public class singleCaseProcess {
     public void writeHeaderSingleCase(String caseName, String executeDevicename) throws IOException {
         test1.testmethod();
         String result2 = test1.str2;
-        String excelPath = result2 + executeDevicename + "-" + String.valueOf(dateUtil.getYear(excel.date)) + "-" + String.valueOf(dateUtil.getMonth(excel.date)) + "-"
-                + String.valueOf(dateUtil.getDay(excel.date)) + "-" + String.valueOf(dateUtil.getHour(excel.date)) + "-" + String.valueOf(dateUtil.getMinute(excel.date)) + caseName + ".xlsx";
+        String excelPath = result2 + executeDevicename + "-" + String.valueOf(DateUtil.getYear(excel.date)) + "-" + String.valueOf(DateUtil.getMonth(excel.date)) + "-"
+                + String.valueOf(DateUtil.getDay(excel.date)) + "-" + String.valueOf(DateUtil.getHour(excel.date)) + "-" + String.valueOf(DateUtil.getMinute(excel.date)) + caseName + ".xlsx";
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("testdata1");
         FileOutputStream outputStream = new FileOutputStream(excelPath);

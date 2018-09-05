@@ -19,7 +19,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-public class excelOperation {
+public class ExcelOperation {
 	public Date date = new Date();
 	test test1 = new test();
 	String testCaseName = "";
@@ -30,11 +30,11 @@ public class excelOperation {
 			String result2 = test1.str2;
 			// #测试日志存放路径
 			String excelPath = result2 +executeDevicename+"-" 
-					+String.valueOf(dateUtil.getYear(date))+"-"
-					+ String.valueOf(dateUtil.getMonth(date)) + "-"
-					+ String.valueOf(dateUtil.getDay(date)) + "-"
-					+ String.valueOf(dateUtil.getHour(date)) + "-"
-					+ String.valueOf(dateUtil.getMinute(date)) + testCaseName
+					+String.valueOf(DateUtil.getYear(date))+"-"
+					+ String.valueOf(DateUtil.getMonth(date)) + "-"
+					+ String.valueOf(DateUtil.getDay(date)) + "-"
+					+ String.valueOf(DateUtil.getHour(date)) + "-"
+					+ String.valueOf(DateUtil.getMinute(date)) + testCaseName
 					+ ".xlsx";
 			File file = new File(excelPath);
 			InputStream fis = new FileInputStream(file);
