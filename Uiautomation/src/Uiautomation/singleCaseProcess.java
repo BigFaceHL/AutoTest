@@ -80,8 +80,10 @@ public class singleCaseProcess {
                     return; // 判断Excel是否有多余的空行数
                 String[] value = new String[7];
                 for (int j = 0; j < 7; j++) {
-                    if (row.getCell(j) == null)
-                        continue;
+                    if (row.getCell(j) == null){
+                    	value[j]="";
+                    	continue;
+                    }
                     row.getCell(j).setCellType(Cell.CELL_TYPE_STRING);
                     value[j] = row.getCell(j).getStringCellValue().trim();// 操作类型
                 }
