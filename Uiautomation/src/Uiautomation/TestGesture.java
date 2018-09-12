@@ -1,5 +1,8 @@
 package Uiautomation;
 
+import com.gargoylesoftware.htmlunit.javascript.host.Touch;
+
+import java.time.Duration;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -22,29 +25,34 @@ public class TestGesture {
         System.out.println("sessionId:" + driver.getSessionId());
         int width = driver.manage().window().getSize().width;
         int height = driver.manage().window().getSize().height;
+        TouchAction action= new TouchAction(driver);
         switch (actualparameter) {
             case "向左滑动":
                 Thread.sleep(1200);
                 System.out.println("设备" + deivece + "宽" + width + "高" + height + "滑动X" + width * 11 / 12 + "滑动endX" + width / 20 + "向左滑动");
-                driver.swipe(width * 11 / 12, height / 2, width / 20, height / 2, 2500);
-
+//                driver.swipe(width * 11 / 12, height / 2, width / 20, height / 2, 2500);
+                action.press(width * 11 / 12, height / 2).waitAction(Duration.ofMillis(1000)).moveTo(width / 20, height / 2).release().perform();
                 Thread.sleep(1000);
                 break;
             case "向右滑动":
-
+                Thread.sleep(1200);
                 System.out.println("设备" + deivece + "宽" + width + "高" + height + "滑动X" + width / 10 + "滑动endX" + width * 9 / 10 + "向右滑动");
-                driver.swipe(width / 10, height / 2, width * 9 / 10, height / 2, 2000);
+//                driver.swipe(width / 10, height / 2, width * 9 / 10, height / 2, 2000);
+                action.press(width / 10, height / 2).waitAction(Duration.ofMillis(1000)).moveTo(width * 9 / 10, height / 2).release().perform();
                 Thread.sleep(1000);
                 break;
             case "向上滑动":
+                Thread.sleep(1200);
                 System.out.println("设备" + deivece + "宽" + width + "高" + height + "滑动Y" + height * 8 / 10 + "滑动endY" + height / 10 + "向上滑动");
-                driver.swipe(width / 2, height * 8 / 10, width / 2, height / 10, 1000);
+//                driver.swipe(width / 2, height * 8 / 10, width / 2, height / 10, 1000);
+                action.press(width / 2, height * 8 / 10).waitAction(Duration.ofMillis(1000)).moveTo(width / 2, height / 10).release().perform();
                 Thread.sleep(1000);
                 break;
             case "向下滑动":
                 Thread.sleep(1200);
                 System.out.println("设备" + deivece + "宽" + width + "高" + height + "滑动Y" + height * 3 / 10 + "滑动endY" + height * 9 / 10 + "向下滑动");
-                driver.swipe(width / 2, height * 3 / 10, width / 2, height * 9 / 10, 1000);
+//                driver.swipe(width / 2, height * 3 / 10, width / 2, height * 9 / 10, 1000);
+                action.press(width / 2, height  *3/ 10).waitAction(Duration.ofMillis(1000)).moveTo(width / 2, height * 8 / 10).release().perform();//5.0以上的滑动
                 Thread.sleep(1000);
                 break;
             default:
@@ -67,32 +75,32 @@ public class TestGesture {
         switch (locklock.length())//手势密码的长度（9个点从0开始到8）
         {
             case 4:
-                touchAction.press(bot.get(block[i])).waitAction(1500).moveTo(bot.get(block[i + 1])).moveTo(bot.get(block[i + 2]))
+                touchAction.press(bot.get(block[i])).waitAction(Duration.ofMillis(1500)).moveTo(bot.get(block[i + 1])).moveTo(bot.get(block[i + 2]))
                         .moveTo(bot.get(block[i + 3])).release();
                 touchAction.perform();
                 break;
             case 5:
-                touchAction.press(bot.get(block[i])).waitAction(1500).moveTo(bot.get(block[i + 1])).moveTo(bot.get(block[i + 2]))
+                touchAction.press(bot.get(block[i])).waitAction(Duration.ofMillis(1500)).moveTo(bot.get(block[i + 1])).moveTo(bot.get(block[i + 2]))
                         .moveTo(bot.get(block[i + 3])).moveTo(bot.get(block[i + 4])).release();
                 touchAction.perform();
                 break;
             case 6:
-                touchAction.press(bot.get(block[i])).waitAction(1500).moveTo(bot.get(block[i + 1])).moveTo(bot.get(block[i + 2]))
+                touchAction.press(bot.get(block[i])).waitAction(Duration.ofMillis(1500)).moveTo(bot.get(block[i + 1])).moveTo(bot.get(block[i + 2]))
                         .moveTo(bot.get(block[i + 3])).moveTo(bot.get(block[i + 4])).moveTo(bot.get(block[i + 5])).release();
                 touchAction.perform();
                 break;
             case 7:
-                touchAction.press(bot.get(block[i])).waitAction(1500).moveTo(bot.get(block[i + 1])).moveTo(bot.get(block[i + 2]))
+                touchAction.press(bot.get(block[i])).waitAction(Duration.ofMillis(1500)).moveTo(bot.get(block[i + 1])).moveTo(bot.get(block[i + 2]))
                         .moveTo(bot.get(block[i + 3])).moveTo(bot.get(block[i + 4])).moveTo(bot.get(block[i + 5])).moveTo(bot.get(block[i + 6])).release();
                 touchAction.perform();
                 break;
             case 8:
-                touchAction.press(bot.get(block[i])).waitAction(1500).moveTo(bot.get(block[i + 1])).moveTo(bot.get(block[i + 2]))
+                touchAction.press(bot.get(block[i])).waitAction(Duration.ofMillis(1500)).moveTo(bot.get(block[i + 1])).moveTo(bot.get(block[i + 2]))
                         .moveTo(bot.get(block[i + 3])).moveTo(bot.get(block[i + 4])).moveTo(bot.get(block[i + 5])).moveTo(bot.get(block[i + 6])).moveTo(bot.get(block[i + 7])).release();
                 touchAction.perform();
                 break;
             case 9:
-                touchAction.press(bot.get(block[i])).waitAction(1500).moveTo(bot.get(block[i + 1])).moveTo(bot.get(block[i + 2]))
+                touchAction.press(bot.get(block[i])).waitAction(Duration.ofMillis(1500)).moveTo(bot.get(block[i + 1])).moveTo(bot.get(block[i + 2]))
                         .moveTo(bot.get(block[i + 3])).moveTo(bot.get(block[i + 4])).moveTo(bot.get(block[i + 5])).moveTo(bot.get(block[i + 6])).moveTo(bot.get(block[i + 7])).moveTo(bot.get(block[i + 8])).release();
                 touchAction.perform();
                 break;
@@ -108,6 +116,7 @@ public class TestGesture {
         boolean a = false;
         int counter = 0;
         String totalText = driver.getPageSource();  //滑动前获取pagesource
+        TouchAction action=new TouchAction(driver);
         while (!a && counter < 30) { //如果找不到，最多找10遍
             if (totalText.contains(actualparameter)) {
                 bot = driver.findElements(By.id(actualelement));
@@ -117,14 +126,16 @@ public class TestGesture {
                     if (proTitle.contains(actualparameter)) {
                         System.out.print("找到" + proTitle + '\n');
                         a = true;
-                        driver.swipe(width / 2, height * 8 / 20, width / 2, height * 6 / 20, 5000); //找到元素以后继续往下滑动一下，不然可能找不到标题
+//                        driver.swipe(width / 2, height * 8 / 20, width / 2, height * 6 / 20, 5000); //找到元素以后继续往下滑动一下，不然可能找不到标题
+                        action.press(width / 2, height * 8 / 20).waitAction(Duration.ofMillis(2000)).moveTo(width / 2, height * 6 / 20).release().perform();
                         break;
                     }
                 }
             }
             if (a == false) {
                 System.out.print("没有找到" + actualparameter + "!" + '\n');
-                driver.swipe(width / 2, height * 9 / 10, width / 2, height * 4 / 10, 5000);
+//                driver.swipe(width / 2, height * 9 / 10, width / 2, height * 4 / 10, 5000);
+                action.press(width / 2, height * 9 / 10).waitAction(Duration.ofMillis(2000)).moveTo(width / 2, height * 4 / 10).release().perform();
                 Thread.sleep(1000);
             }
             counter = counter + 1;
@@ -138,6 +149,7 @@ public class TestGesture {
        int  height = driver.manage().window().getSize().height;
         boolean a = false;
         int count = 0;
+        TouchAction action=new TouchAction(driver);
         while (!a && count < 30) {
             bot = driver.findElements(By.id(actualelement));
             for (int i = 0; i < bot.size(); i++) {
@@ -155,16 +167,21 @@ public class TestGesture {
                 Thread.sleep(3000);
                 switch (mode) {
                     case "向下":
-                        driver.swipe(width / 2, height * 8 / 10, width / 2, height * 2 / 10, 2000);
+//                        driver.swipe(width / 2, height * 8 / 10, width / 2, height * 2 / 10, 2000);
+                        action.press(width / 2, height * 8 / 10).waitAction(Duration.ofMillis(1000)).moveTo(width / 2, height * 2 / 10).release().perform();
                         break;
                     case "向上":
-                        driver.swipe(width / 2, height * 3 / 10, width / 2, height * 8 / 10, 2000);
+//                        driver.swipe(width / 2, height * 3 / 10, width / 2, height * 8 / 10, 2000);
+                        action.press(width / 2, height * 3 / 10).waitAction(Duration.ofMillis(1000)).moveTo(width / 2, height * 8 / 10).release().perform();
                         break;
                     case "向左":
-                        driver.swipe(width * 8 / 10, height / 2, width * 1 / 10, height / 2, 500);
+//                        driver.swipe(width * 8 / 10, height / 2, width * 1 / 10, height / 2, 500);
+                        action.press(width * 8 / 10, height / 2).waitAction(Duration.ofMillis(1000)).moveTo(width * 1 / 10, height / 2).release().perform();
                         break;
+
                     case "向右":
-                        driver.swipe(width * 1 / 10, height / 2, width * 8 / 10, height / 2, 500);
+//                        driver.swipe(width * 1 / 10, height / 2, width * 8 / 10, height / 2, 500);
+                        action.press(width * 1 / 10, height / 2).waitAction(Duration.ofMillis(1000)).moveTo(width * 8 / 10, height / 2).release().perform();
                         break;
                     default:
                         break;
@@ -188,6 +205,7 @@ public class TestGesture {
         int counter = 0;
         List<WebElement> bot;
         String totalText = driver.getPageSource();  //滑动前获取pagesource
+        TouchAction action=new TouchAction(driver);
         while (!findZhangJie && counter < 30) { //如果找不到，最多找10遍
             if (totalText.contains(actualparameter)) {
                 bot = driver.findElements(By.id(actualelement));
@@ -206,9 +224,11 @@ public class TestGesture {
                 System.out.print("没有找到" + actualparameter + "!" + '\n');
                 Thread.sleep(3000);
                 if (direction.equals("down")) {
-                    driver.swipe(width / 2, height * 4 / 10, width / 2, height * 9 / 10, 5000); //向上滑
+//                    driver.swipe(width / 2, height * 4 / 10, width / 2, height * 9 / 10, 5000); //向上滑
+                    action.press(width / 2, height * 4 / 10).waitAction(Duration.ofMillis(2000)).moveTo(width / 2, height * 9 / 10).release().perform();
                 } else {
-                    driver.swipe(width / 2, height * 9 / 10, width / 2, height * 4 / 10, 5000); //向下滑
+//                    driver.swipe(width / 2, height * 9 / 10, width / 2, height * 4 / 10, 5000); //向下滑
+                    action.press(width / 2, height * 9 / 10).waitAction(Duration.ofMillis(2000)).moveTo(width / 2, height * 4 / 10).release().perform();
                 }
                 Thread.sleep(1000);
             }

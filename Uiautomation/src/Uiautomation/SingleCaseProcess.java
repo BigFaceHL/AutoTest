@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.Duration;
 import java.util.List;
 import java.util.Set;
 
@@ -81,8 +82,8 @@ public class SingleCaseProcess {
                 String[] value = new String[7];
                 for (int j = 0; j < 7; j++) {
                     if (row.getCell(j) == null){
-                    	value[j]="";
-                    	continue;
+                        value[j]="";
+                        continue;
                     }
                     row.getCell(j).setCellType(Cell.CELL_TYPE_STRING);
                     value[j] = row.getCell(j).getStringCellValue().trim();// 操作类型
@@ -126,7 +127,7 @@ public class SingleCaseProcess {
 
                     switch (value[0]) {
 
-  
+
 
                         case "if_文本包含":
                             excel.writeResult(value[4], resultMessage, executeDevicename);// 写入单个测试用例单个步骤的执行结果
@@ -159,16 +160,16 @@ public class SingleCaseProcess {
                             excel.writeResult(value[4], resultMessage, executeDevicename);// 写入单个测试用例单个步骤的执行结果
                             break;
 
-                        case "滚动查找点击元素":// 只能第一页查找，不能翻页查找元素
-                            try {
-                                WebDriverWait wait = new WebDriverWait(driver, maxWaitTime);// 最多等待时间由maxWaitTime指定
-                                driver.scrollTo(value[1]).click();
-                            } catch (Exception e) {
-                                resultMessage = e.getMessage();
-                                caseExecResult = "failure";
-                            }
-                            excel.writeResult(value[4], resultMessage, executeDevicename);// 写入单个测试用例单个步骤的执行结果
-                            break;
+//                        case "滚动查找点击元素":// 只能第一页查找，不能翻页查找元素
+//                            try {
+//                                WebDriverWait wait = new WebDriverWait(driver, maxWaitTime);// 最多等待时间由maxWaitTime指定
+//                                driver.scrollTo(value[1]).click();
+//                            } catch (Exception e) {
+//                                resultMessage = e.getMessage();
+//                                caseExecResult = "failure";
+//                            }
+//                            excel.writeResult(value[4], resultMessage, executeDevicename);// 写入单个测试用例单个步骤的执行结果
+//                            break;
 
                         case "向下滑动查找元素_id":// 可以翻页查找元素
                             try {
@@ -225,7 +226,10 @@ public class SingleCaseProcess {
                                 do {
                                     tmpCount = tmpCount + 1;
                                     str1 = driver.getPageSource(); // 滑动前获取pagesource
-                                    driver.swipe(width / 2, height * 9 / 10, width / 2, height / 10, 2000);
+//                                    driver.swipe(width / 2, height * 9 / 10, width / 2, height / 10, 2000);
+                                    TouchAction touchAction=new TouchAction(driver);
+                                    touchAction.press(width / 2, height * 9 / 10).waitAction(Duration.ofMillis(2000)).moveTo(width / 2, height / 10).release().perform();
+
                                     Thread.sleep(2000);
                                     str2 = driver.getPageSource();// 滑动后获取pagesource
                                 } while (!(str1.equals(str2)) && tmpCount <= 10); // 最大滑动10次
@@ -300,6 +304,7 @@ public class SingleCaseProcess {
                                 }
 
                             } catch (Exception e) {
+                                System.out.println(e.getMessage());
                                 resultMessage = e.getMessage();
                                 caseExecResult = "failure";
                             }
@@ -348,11 +353,15 @@ public class SingleCaseProcess {
                         case "长按_id":
                             try {
                                 WebDriverWait wait = new WebDriverWait(driver, maxWaitTime);// 最多等待时间由maxWaitTime指定
+                                TouchAction touchAction=new TouchAction(driver);
                                 if (value[2].equals("")) {
                                     if (wait.until(ExpectedConditions.elementToBeClickable(By.id(value[1]))) != null) {
                                         WebElement test = driver.findElement(By.id(value[1]));
                                         if (test != null) {
-                                            driver.tap(1, test, 5000);
+                                            touchAction.longPress(test , Duration.ofMillis(4000));
+                                            driver.performTouchAction(touchAction);
+
+
                                         }
                                     }
 
@@ -360,7 +369,7 @@ public class SingleCaseProcess {
                                     wait.until(ExpectedConditions.elementToBeClickable((WebElement) driver.findElements(By.id(value[1])).get(Integer.parseInt(value[2]))));
                                     bot = driver.findElements(By.id(value[1]));
                                     WebElement test = bot.get(Integer.parseInt(value[2]));
-                                    driver.tap(1, test, 5000);
+                                    touchAction.longPress(test , Duration.ofMillis(4000)).release().perform();
 
                                 }
 
@@ -374,15 +383,16 @@ public class SingleCaseProcess {
                         case "长按_xpath":
                             try {
                                 WebDriverWait wait = new WebDriverWait(driver, maxWaitTime);// 最多等待时间由maxWaitTime指定
+                                TouchAction touchAction=new TouchAction(driver);
                                 if (value[2].equals("")) {
                                     wait.until(ExpectedConditions.elementToBeClickable(By.xpath(value[1])));
-                                    WebElement longPress = driver.findElement(By.xpath(value[1]));
-                                    driver.tap(1, longPress, 5000);
+                                    WebElement wl = driver.findElement(By.xpath(value[1]));
+                                    touchAction.longPress(wl , Duration.ofMillis(4000)).release().perform();
                                 } else {
                                     wait.until(ExpectedConditions.elementToBeClickable((WebElement) driver.findElements(By.xpath(value[1])).get(Integer.parseInt(value[2]))));
                                     bot = driver.findElements(By.xpath(value[1]));
-                                    WebElement test = bot.get(Integer.parseInt(value[2]));
-                                    driver.tap(1, test, 5000);
+                                    WebElement wl = bot.get(Integer.parseInt(value[2]));
+                                    touchAction.longPress(wl , Duration.ofMillis(4000)).release().perform();
 
                                 }
 
@@ -536,6 +546,7 @@ public class SingleCaseProcess {
                             break;
                         case "读取局部信息_xpath":
                             try {
+
                                 WebDriverWait wait = new WebDriverWait(driver, maxWaitTime);// 最多等待时间由maxWaitTime指定
                                 wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(value[1])));
                                 if (value[2].equals("")) {
@@ -1143,7 +1154,7 @@ public class SingleCaseProcess {
                             excel.writeResult(value[0], resultMessage, executeDevicename);
 
                     }
-                    //切换至原生
+//                    切换至原生
                     if (value[6]!=null&&!value[6].equals("")) {
                         if (value[6].equals("H5") || value[6].equals("h5")) {
                             if (nativeApp!=null&&!nativeApp.equals("")){
@@ -1153,12 +1164,15 @@ public class SingleCaseProcess {
                             }
                         }
                     }
-                    if (resultMessage.length() == 0) {
-                        System.out.println("设备" + executeDevicename + ": 用例编号" + (i + 1) + "成功跑通" + "\r");
-                    } else {
-                        System.out.println("设备" + executeDevicename + ": 用例编号" + (i + 1) + "跑失败" + "用例：" + value[1] + "\r");
-                        caseExecResult = "fail";
+                    if (resultMessage!=null){
+                        if (resultMessage.length() == 0) {
+                            System.out.println("设备" + executeDevicename + ": 用例编号" + (i + 1) + "成功跑通" + "\r");
+                        } else {
+                            System.out.println("设备" + executeDevicename + ": 用例编号" + (i + 1) + "跑失败" + "用例：" + value[1] + "\r");
+                            caseExecResult = "fail";
+                        }
                     }
+
                 }
 
                 try {
