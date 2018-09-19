@@ -663,7 +663,7 @@ public class SingleCaseProcess {
                                 actualValue = driver.findElement(By.xpath(value[1])).getText();
                                 expectedValue = value[5];
                                 checkResult = WarpingFunctions.verifyTest(actualValue, expectedValue);
-                                if (checkResult == "fail") {
+                                if ((checkResult == ""||checkResult == "fail")) {
                                     FileUtil.takeTakesScreenshot(driver);
                                     resultMessage = FileUtil.filePath;
                                     caseExecResult = "fail";
@@ -689,7 +689,7 @@ public class SingleCaseProcess {
 
                                 expectedValue = value[5];
                                 checkResult = WarpingFunctions.verifyTest(actualValue, expectedValue);
-                                if (checkResult == "fail") {
+                                if ((checkResult == ""||checkResult == "fail")) {
                                     FileUtil.takeTakesScreenshot(driver);
                                     resultMessage = FileUtil.filePath;
                                     caseExecResult = "fail";
@@ -716,14 +716,14 @@ public class SingleCaseProcess {
                                 actualValue = checkedText;
                                 expectedValue = checkedText; // 默认情况下，假定校验成功，在期望结果与实际结果一样
                                 int count = 0;
-                                while (checkResult == "fail" && count < 3) {
+                                while ((checkResult == ""||checkResult == "fail") && count < 3) {
                                     pageSourceString = driver.getPageSource(); // 获取页面pagesource
-                                    Thread.sleep(2000);
+                                    Thread.sleep(1000);
                                     checkResult = WarpingFunctions.verifyContainTest(pageSourceString, checkedText, "y");
                                     count++;
                                 }
 
-                                if (checkResult == "fail") {
+                                if ((checkResult == ""||checkResult == "fail")) {
                                     FileUtil.takeTakesScreenshot(driver);
                                     resultMessage = FileUtil.filePath;
                                     caseExecResult = "fail";
@@ -750,13 +750,13 @@ public class SingleCaseProcess {
                                 actualValue = "";
                                 expectedValue = ""; // 默认情况下，假定校验成功，在期望结果与实际结果一样
                                 int count = 0;
-                                while (checkResult == "fail" && count < 2) {
+                                while ((checkResult == ""||checkResult == "fail") && count < 2) {
                                     pageSourceString = driver.getPageSource(); // 获取页面pagesource
                                     Thread.sleep(1000);
                                     checkResult = WarpingFunctions.verifyContainTest(pageSourceString, checkedText, "n");
                                     count++;
                                 }
-                                if (checkResult == "fail") {
+                                if ((checkResult == ""||checkResult == "fail")) {
                                     FileUtil.takeTakesScreenshot(driver);
                                     resultMessage = FileUtil.filePath;
                                     caseExecResult = "fail";
@@ -792,7 +792,7 @@ public class SingleCaseProcess {
                                 expectedValue = smallText; // 默认情况下，假定校验成功，在期望结果与实际结果一样
 
                                 checkResult = WarpingFunctions.verifyContainTest(bigText, smallText, "y");
-                                if (checkResult == "fail") {
+                                if ((checkResult == ""||checkResult == "fail")) {
                                     FileUtil.takeTakesScreenshot(driver);
                                     resultMessage = FileUtil.filePath;
                                     caseExecResult = "fail";
@@ -829,7 +829,7 @@ public class SingleCaseProcess {
                                 expectedValue = smallText; // 默认情况下，假定校验成功，在期望结果与实际结果一样
 
                                 checkResult = WarpingFunctions.verifyContainTest(bigText, smallText, "y");
-                                if (checkResult == "fail") {
+                                if ((checkResult == ""||checkResult == "fail")) {
                                     FileUtil.takeTakesScreenshot(driver);
                                     resultMessage = FileUtil.filePath;
                                     caseExecResult = "fail";
@@ -866,7 +866,7 @@ public class SingleCaseProcess {
                                 expectedValue = ""; // 默认情况下，假定校验成功，在期望结果与实际结果一样
 
                                 checkResult = WarpingFunctions.verifyContainTest(bigText, smallText, "n");
-                                if (checkResult == "fail") {
+                                if ((checkResult == ""||checkResult == "fail")) {
                                     FileUtil.takeTakesScreenshot(driver);
                                     resultMessage = FileUtil.filePath;
                                     caseExecResult = "fail";
@@ -903,7 +903,7 @@ public class SingleCaseProcess {
                                 expectedValue = ""; // 默认情况下，假定校验成功，在期望结果与实际结果一样
 
                                 checkResult = WarpingFunctions.verifyContainTest(bigText, smallText, "n");
-                                if (checkResult == "fail") {
+                                if ((checkResult == ""||checkResult == "fail")) {
                                     FileUtil.takeTakesScreenshot(driver);
                                     resultMessage = FileUtil.filePath;
                                     caseExecResult = "fail";
@@ -955,7 +955,7 @@ public class SingleCaseProcess {
                                 expectedValue = smallText; // 默认情况下，假定校验成功，在期望结果与实际结果一样
 
                                 checkResult = WarpingFunctions.verifyContainTest(bigText, smallText, "y");
-                                if (checkResult == "fail") {
+                                if ((checkResult == ""||checkResult == "fail")) {
                                     FileUtil.takeTakesScreenshot(driver);
                                     resultMessage = FileUtil.filePath;
                                     caseExecResult = "fail";
@@ -981,7 +981,7 @@ public class SingleCaseProcess {
                                 int actualValue = totalString;
                                 int expectedValue = totalString; // 默认情况下，假定校验成功，在期望结果与实际结果一样
                                 checkResult = WarpingFunctions.comment(comment2, totalString);
-                                if (checkResult == "fail") {
+                                if ((checkResult == ""||checkResult == "fail")) {
                                     FileUtil.takeTakesScreenshot(driver);
                                     resultMessage = FileUtil.filePath;
                                     caseExecResult = "fail";
@@ -1048,7 +1048,7 @@ public class SingleCaseProcess {
                                 expectedValue = smallText; // 默认情况下，假定校验成功，在期望结果与实际结果一样
 
                                 checkResult = WarpingFunctions.verifyContainTest(bigText, smallText, "y");
-                                if (checkResult == "fail") {
+                                if ((checkResult == ""||checkResult == "fail")) {
                                     FileUtil.takeTakesScreenshot(driver);
                                     resultMessage = FileUtil.filePath;
                                     caseExecResult = "fail";
