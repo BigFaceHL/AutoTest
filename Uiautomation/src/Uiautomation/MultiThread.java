@@ -111,8 +111,8 @@ public class MultiThread implements  Runnable {
             capabilities.setCapability("app", appPath);
             capabilities.setCapability("appPackage", appPackages);
             capabilities.setCapability("appActivity", appActivitys);
-            capabilities.setCapability("unicodeKeyboard", "true");
-            capabilities.setCapability("resetKeyboard", "true");
+//            capabilities.setCapability("unicodeKeyboard", "true");
+//            capabilities.setCapability("resetKeyboard", "true");//个别手机因这两个配置会跑不起来
             capabilities.setCapability("noReset", "true");
             capabilities.setCapability("noSign", "true");
             capabilities.setCapability("chromedriverExecutableDir", "C:\\Users\\Administrator\\AppData\\Roaming\\npm\\node_modules\\appium\\node_modules\\appium-chromedriver\\chromedriver\\win");
