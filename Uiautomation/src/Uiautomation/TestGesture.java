@@ -21,11 +21,11 @@ public class TestGesture {
     String returnMessage;
 
     //向左右上下滑动屏幕
-    public  void swipeTo(String actualparameter, AndroidDriver driver, String deivece) throws InterruptedException {
+    public void swipeTo(String actualparameter, AndroidDriver driver, String deivece) throws InterruptedException {
         System.out.println("sessionId:" + driver.getSessionId());
         int width = driver.manage().window().getSize().width;
         int height = driver.manage().window().getSize().height;
-        TouchAction action= new TouchAction(driver);
+        TouchAction action = new TouchAction(driver);
         switch (actualparameter) {
             case "向左滑动":
                 Thread.sleep(1200);
@@ -52,7 +52,7 @@ public class TestGesture {
                 Thread.sleep(1200);
                 System.out.println("设备" + deivece + "宽" + width + "高" + height + "滑动Y" + height * 3 / 10 + "滑动endY" + height * 9 / 10 + "向下滑动");
 //                driver.swipe(width / 2, height * 3 / 10, width / 2, height * 9 / 10, 1000);
-                action.press(width / 2, height  *3/ 10).waitAction(Duration.ofMillis(1000)).moveTo(width / 2, height * 8 / 10).release().perform();//5.0以上的滑动
+                action.press(width / 2, height * 3 / 10).waitAction(Duration.ofMillis(1000)).moveTo(width / 2, height * 8 / 10).release().perform();//5.0以上的滑动
                 Thread.sleep(1000);
                 break;
             default:
@@ -112,11 +112,11 @@ public class TestGesture {
     //向下滑动查找到某元素为止，可以翻页查找
     public static void swipeToelement(String actualelement, AndroidDriver driver, String actualparameter, List<WebElement> bot) throws InterruptedException {
         int width = driver.manage().window().getSize().width;
-     int    height = driver.manage().window().getSize().height;
+        int height = driver.manage().window().getSize().height;
         boolean a = false;
         int counter = 0;
         String totalText = driver.getPageSource();  //滑动前获取pagesource
-        TouchAction action=new TouchAction(driver);
+        TouchAction action = new TouchAction(driver);
         while (!a && counter < 30) { //如果找不到，最多找10遍
             if (totalText.contains(actualparameter)) {
                 bot = driver.findElements(By.id(actualelement));
@@ -144,12 +144,12 @@ public class TestGesture {
     }
 
     //滑动查找到某元素为止，可以翻页查找,可以通过mode参数配置向上下左右四个不同方向进行滑动
-    public  void swipeToelementAllD(String actualelement, AndroidDriver driver, String actualparameter, List<WebElement> bot, String mode) throws InterruptedException {
-       int  width = driver.manage().window().getSize().width;
-       int  height = driver.manage().window().getSize().height;
+    public void swipeToelementAllD(String actualelement, AndroidDriver driver, String actualparameter, List<WebElement> bot, String mode) throws InterruptedException {
+        int width = driver.manage().window().getSize().width;
+        int height = driver.manage().window().getSize().height;
         boolean a = false;
         int count = 0;
-        TouchAction action=new TouchAction(driver);
+        TouchAction action = new TouchAction(driver);
         while (!a && count < 30) {
             bot = driver.findElements(By.id(actualelement));
             for (int i = 0; i < bot.size(); i++) {
@@ -198,14 +198,14 @@ public class TestGesture {
 
 
     //滑动查找到某元素为止，并点击该元素；可以翻页查找
-    public  void swipeAndClick(String actualelement, AndroidDriver driver, String actualparameter, String direction) throws InterruptedException {
-      int   width = driver.manage().window().getSize().width;
-       int  height = driver.manage().window().getSize().height;
+    public void swipeAndClick(String actualelement, AndroidDriver driver, String actualparameter, String direction) throws InterruptedException {
+        int width = driver.manage().window().getSize().width;
+        int height = driver.manage().window().getSize().height;
         boolean findZhangJie = false;
         int counter = 0;
         List<WebElement> bot;
         String totalText = driver.getPageSource();  //滑动前获取pagesource
-        TouchAction action=new TouchAction(driver);
+        TouchAction action = new TouchAction(driver);
         while (!findZhangJie && counter < 30) { //如果找不到，最多找10遍
             if (totalText.contains(actualparameter)) {
                 bot = driver.findElements(By.id(actualelement));
@@ -241,9 +241,9 @@ public class TestGesture {
     }
 
     //轻触屏幕中央，弹出阅读器的设置页面
-    public  void getReadSet(AndroidDriver driver, String appType, String oprType) {
-        int  width = driver.manage().window().getSize().width;
-       int  height = driver.manage().window().getSize().height;
+    public void getReadSet(AndroidDriver driver, String appType, String oprType) {
+        int width = driver.manage().window().getSize().width;
+        int height = driver.manage().window().getSize().height;
         boolean setDisplayed = false;
         int counter = 0;
         String displayedText = "", displayedText1 = "不可能出现的字符串", displayedText2 = "不可能出现的字符串2";
@@ -264,9 +264,9 @@ public class TestGesture {
         {
             if (appType.equalsIgnoreCase("ZS")) //获取弹出设置洁面后页面上应该能显示的字段
             {
-                displayedText = "目录";
-                displayedText1 = "退出朗读"; //对于追书来说，有可能弹出页面显示的信息不一样，所以不同的情况都要考虑
-                displayedText2 = "减速 -";
+                displayedText = "目录";//老UI
+                displayedText1 = "退出朗读模式"; //对于追书来说，有可能弹出页面显示的信息不一样，所以不同的情况都要考虑
+                displayedText2 = "退出自动翻页";
             } else if (appType.equalsIgnoreCase("MHD")) {
                 displayedText = "目录";
             } else if (appType.equalsIgnoreCase("KJ")) {
@@ -287,10 +287,20 @@ public class TestGesture {
             }
 
 
-            while (!setDisplayed && counter < 4) { //如果弹不出来，最多弹2遍
+            while (!setDisplayed && counter < 2) { //如果弹不出来，最多弹2遍
+
                 if (totalText.contains(displayedText) || totalText.contains(displayedText1) || totalText.contains(displayedText2)) {
                     setDisplayed = true;
                     break;
+                } else if (appType.equalsIgnoreCase("ZS")) {
+                    String readedText = null;
+                    WebDriverWait wait = new WebDriverWait(driver, 2);// 最多等待时间由maxWaitTime指定
+                    wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.ushaqi.zhuishushenqi:id/reader_oper_top_title")));
+                    readedText = driver.findElement(By.id("com.ushaqi.zhuishushenqi:id/reader_oper_top_title")).getText(); // 要获取的页面元素的文本内容
+                    if (readedText != null & !readedText.equals("")) {
+                        setDisplayed = true;
+                        break;
+                    }
                 } else {
                     try {
 
@@ -316,26 +326,33 @@ public class TestGesture {
         }
 
     }
+
     /**
      * seekBar的滑动
-     * @param seekBar 元素
-     * @param driver  驱动
+     *
+     * @param seekBar     元素
+     * @param driver      驱动
      * @param fromPercent seekBar要滑动的百分比开始位置
      * @param toPercent   seekBar要滑动的百分比结束位置
      */
-    public void moveSeekBar(WebElement seekBar,AndroidDriver driver ,float fromPercent ,float toPercent){
+    public void moveSeekBar(WebElement seekBar, AndroidDriver driver, float fromPercent, float toPercent) {
 
         int startX = seekBar.getLocation().getX(); //获取 seekbar的X坐标.
         int endX = seekBar.getSize().getWidth(); //获取 seekbar的宽度.
 
         int yAxis = seekBar.getLocation().getY(); //获取 seekbar的Y坐标.
-        int startXDirectionAt =  fromPercent == 0 ? startXDirectionAt=startX :(int) (endX *fromPercent);//endX * percent 表示seekbar宽度的 percent% .
-        int moveToXDirectionAt = (int) (endX *toPercent);//endX * percent 表示seekbar宽度的 percent% .
-        System.out.println("startX:"+startX+"startXDirectionAt:"+startXDirectionAt+"percent"+fromPercent+toPercent);
-        System.out.println("Moving seek bar at " +startXDirectionAt+" to "+ moveToXDirectionAt+" In X direction.");
+        int startXDirectionAt = fromPercent == 0 ? startXDirectionAt = startX : (int) (endX * fromPercent);//endX * percent 表示seekbar宽度的 percent% .
+        int moveToXDirectionAt = (int) (endX * toPercent);//endX * percent 表示seekbar宽度的 percent% .
+        System.out.println("startX:" + startX + "startXDirectionAt:" + startXDirectionAt + "percent" + fromPercent + toPercent);
+        System.out.println("Moving seek bar at " + startXDirectionAt + " to " + moveToXDirectionAt + " In X direction.");
 
-        TouchAction act=new TouchAction(driver);
-        act.press(startXDirectionAt,yAxis).moveTo(moveToXDirectionAt,yAxis).release().perform(); //滑动
+        TouchAction act = new TouchAction(driver);
+        try {
+            act.press(startXDirectionAt, yAxis).moveTo(moveToXDirectionAt, yAxis).release().perform(); //滑动
+            Thread.sleep(1200);
+        } catch (Exception e) {
+
+        }
     }
 
     public String getReturnMessage() {
