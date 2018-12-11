@@ -2,12 +2,9 @@ package Uiautomation;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
-import java.util.Properties;
 
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.openxml4j.opc.OPCPackage;
@@ -72,15 +69,20 @@ public class ExcelOperation {
 			String executeDevicename) {
 		try {
 			String[] input = new String[] { "", stepName, null, null, "", null };
-			if (resultMessage.length() != 0
-					&& (!resultMessage.equals("条件不成立该步骤不执行"))) {
-				input[4] = "failure";
-				input[5] = resultMessage;
-			} else {
-				input[4] = "finished";//
-				input[5] = resultMessage;
+			if (resultMessage!=null){
+				if (resultMessage.length() != 0
+						&& (!resultMessage.equals("条件不成立该步骤不执行"))) {
+					input[4] = "failure";
+					input[5] = resultMessage;
+				} else {
+					input[4] = "finished";//
+					input[5] = resultMessage;
+				}
+				writeRow(input, executeDevicename);// 完成写入操作
+			}else {
+				System.out.println("写入失败");
 			}
-			writeRow(input, executeDevicename);// 完成写入操作
+
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
