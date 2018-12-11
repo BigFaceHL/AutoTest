@@ -36,8 +36,8 @@ public class TestData {
      */
     public void setNowNumber(String caseName, String devicesName) {
         String result2 = test1.str3;
-//	String excelPath=result2+devicesName+"测试相关数据"+".xlsx";
-        String excelPath = result2 + "测试相关数据" + ".xlsx";
+	String excelPath=result2+devicesName+"测试相关数据"+".xlsx";
+//        String excelPath = result2 + "测试相关数据" + ".xlsx";
         String value;
         File file = new File(excelPath);
         int totalRowNumber;
