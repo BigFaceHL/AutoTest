@@ -3,13 +3,10 @@ package Uiautomation;
 import java.awt.List;
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.*;
-
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -81,8 +78,19 @@ public class WarpingFunctions {
         if ((pageSourceString.contains(expectedValue) && checkPoint.equals("y")) || (!(pageSourceString.contains(expectedValue)) && checkPoint.equals("n"))) {
             result = "pass";
         } else {
-            result = "fail";
-            System.out.println("check failed");
+            Pattern p = Pattern.compile("[0-9]");
+            Matcher expctedMacther = p.matcher(expectedValue);
+            Matcher pagesourceMacther = p.matcher(pageSourceString);
+            if (!pagesourceMacther.find()||!expctedMacther.find()) {
+                System.out.println("check failed");
+                result = "fail";
+                return  result;
+            }
+            if (pagesourceMacther.replaceAll("").trim().contains(expctedMacther.replaceAll("").trim())){
+                result = "fail";
+                return  result;
+            }
+            result = "pass";
         }
         return result;
     }
