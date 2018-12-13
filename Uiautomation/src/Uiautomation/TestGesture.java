@@ -110,31 +110,47 @@ public class TestGesture {
     }
 
     //向下滑动查找到某元素为止，可以翻页查找
-    public static void swipeToelement(String actualelement, AndroidDriver driver, String actualparameter, List<WebElement> bot) throws InterruptedException {
+    public static void swipeToelement(String actualelement, AndroidDriver driver, String actualparameter, String ByType) throws InterruptedException {
         int width = driver.manage().window().getSize().width;
         int height = driver.manage().window().getSize().height;
         boolean a = false;
         int counter = 0;
+
         String totalText = driver.getPageSource();  //滑动前获取pagesource
         TouchAction action = new TouchAction(driver);
-        while (!a && counter < 30) { //如果找不到，最多找10遍
-            if (totalText.contains(actualparameter)) {
-                bot = driver.findElements(By.id(actualelement));
-                for (int i = 0; i < bot.size(); i++) {
-                    String proTitle = bot.get(i).getText();
-                    System.out.print(proTitle + i + '\n');
-                    if (proTitle.contains(actualparameter)) {
-                        System.out.print("找到" + proTitle + '\n');
-                        a = true;
-//                        driver.swipe(width / 2, height * 8 / 20, width / 2, height * 6 / 20, 5000); //找到元素以后继续往下滑动一下，不然可能找不到标题
-                        action.press(width / 2, height * 8 / 20).waitAction(Duration.ofMillis(2000)).moveTo(width / 2, height * 6 / 20).release().perform();
+
+        while (!a && counter < 15) { //如果找不到，最多找10遍
+            try {
+                WebDriverWait wait = new WebDriverWait(driver, 10);// 最多等待时间由maxWaitTime指定
+                switch (ByType) {
+                    case "id":
+                        if (wait.until(ExpectedConditions.elementToBeClickable(By.id(actualelement))) != null) {
+                            System.out.print("找到" + actualparameter + '\n');
+                            a = true;
+                            break;
+                        }
                         break;
-                    }
+                    case "xpath":
+                        if (wait.until(ExpectedConditions.elementToBeClickable(By.xpath(actualelement))) != null) {
+                            System.out.print("找到" + actualparameter + '\n');
+                            a = true;
+                            break;
+                        }
+                        break;
+                    default:
+                        if (wait.until(ExpectedConditions.elementToBeClickable(By.id(actualelement))) != null) {
+                            System.out.print("找到" + actualparameter + '\n');
+                            a = true;
+                            break;
+                        }
+                        break;
                 }
+            } catch (Exception e) {
+                a = false;
             }
+
             if (a == false) {
                 System.out.print("没有找到" + actualparameter + "!" + '\n');
-//                driver.swipe(width / 2, height * 9 / 10, width / 2, height * 4 / 10, 5000);
                 action.press(width / 2, height * 9 / 10).waitAction(Duration.ofMillis(2000)).moveTo(width / 2, height * 4 / 10).release().perform();
                 Thread.sleep(1000);
             }
@@ -171,16 +187,13 @@ public class TestGesture {
                         action.press(width / 2, height * 8 / 10).waitAction(Duration.ofMillis(1000)).moveTo(width / 2, height * 2 / 10).release().perform();
                         break;
                     case "向上":
-//                        driver.swipe(width / 2, height * 3 / 10, width / 2, height * 8 / 10, 2000);
                         action.press(width / 2, height * 3 / 10).waitAction(Duration.ofMillis(1000)).moveTo(width / 2, height * 8 / 10).release().perform();
                         break;
                     case "向左":
-//                        driver.swipe(width * 8 / 10, height / 2, width * 1 / 10, height / 2, 500);
                         action.press(width * 8 / 10, height / 2).waitAction(Duration.ofMillis(1000)).moveTo(width * 1 / 10, height / 2).release().perform();
                         break;
 
                     case "向右":
-//                        driver.swipe(width * 1 / 10, height / 2, width * 8 / 10, height / 2, 500);
                         action.press(width * 1 / 10, height / 2).waitAction(Duration.ofMillis(1000)).moveTo(width * 8 / 10, height / 2).release().perform();
                         break;
                     default:
