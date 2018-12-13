@@ -78,19 +78,26 @@ public class WarpingFunctions {
         if ((pageSourceString.contains(expectedValue) && checkPoint.equals("y")) || (!(pageSourceString.contains(expectedValue)) && checkPoint.equals("n"))) {
             result = "pass";
         } else {
-            Pattern p = Pattern.compile("[0-9]");
-            Matcher expctedMacther = p.matcher(expectedValue);
-            Matcher pagesourceMacther = p.matcher(pageSourceString);
+            Pattern pNum = Pattern.compile("[0-9]");
+            Pattern  pNotNum= Pattern.compile("[^0-9]");
+
+            Matcher expctedMacther = pNum.matcher(expectedValue);
+            Matcher pagesourceMacther = pNum.matcher(pageSourceString);
+
             if (!pagesourceMacther.find()||!expctedMacther.find()) {
                 System.out.println("check failed");
                 result = "fail";
                 return  result;
             }
-            if (pagesourceMacther.replaceAll("").trim().contains(expctedMacther.replaceAll("").trim())){
-                result = "fail";
+
+            expctedMacther = pNotNum.matcher(expectedValue);
+            pagesourceMacther = pNotNum.matcher(pageSourceString);
+
+            if ( pagesourceMacther.replaceAll("").trim().contains(expctedMacther.replaceAll("").trim())){
+                result = "pass";
                 return  result;
             }
-            result = "pass";
+            result = "fail";
         }
         return result;
     }
@@ -253,7 +260,7 @@ public class WarpingFunctions {
             else if (oprType.contains("页面包含id")) {
 
                 try {
-                    WebDriverWait wait = new WebDriverWait(driver, 15);// 最多等待时间由maxWaitTime指定
+                    WebDriverWait wait = new WebDriverWait(driver, 10);// 最多等待时间由maxWaitTime指定
 
                     if (isMulti.equals("")) {
                         if (wait.until(ExpectedConditions.elementToBeClickable(By.id(value))) != null) {
