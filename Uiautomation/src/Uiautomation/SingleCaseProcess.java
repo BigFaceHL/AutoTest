@@ -160,6 +160,7 @@ public class SingleCaseProcess {
                             excel.writeResult(value[4], resultMessage, executeDevicename);// 写入单个测试用例单个步骤的执行结果
                             break;
 
+                            //不建议使用的方法
 //                        case "滚动查找点击元素":// 只能第一页查找，不能翻页查找元素
 //                            try {
 //                                WebDriverWait wait = new WebDriverWait(driver, maxWaitTime);// 最多等待时间由maxWaitTime指定
@@ -174,7 +175,7 @@ public class SingleCaseProcess {
                         case "向下滑动查找元素_id":// 可以翻页查找元素
                             try {
                                 WebDriverWait wait = new WebDriverWait(driver, maxWaitTime);// 最多等待时间由maxWaitTime指定
-                                TG.swipeToelement(value[1], driver, value[3], bot);
+                                TG.swipeToelement(value[1], driver, value[3], value[5]);
                             } catch (Exception e) {
                                 resultMessage = e.getMessage();
                                 caseExecResult = "failure";
@@ -663,6 +664,30 @@ public class SingleCaseProcess {
                                 actualValue = driver.findElement(By.xpath(value[1])).getText();
                                 expectedValue = value[5];
                                 checkResult = WarpingFunctions.verifyTest(actualValue, expectedValue);
+                                if ((checkResult == ""||checkResult == "fail")) {
+                                    FileUtil.takeTakesScreenshot(driver);
+                                    resultMessage = FileUtil.filePath;
+                                    caseExecResult = "fail";
+                                }
+                            } catch (Exception e) {
+                                resultMessage = e.getMessage();
+                                checkResult = "failure";
+                                caseExecResult = "failure";
+                            }
+                            excel.writeCheckResult(value[4], resultMessage, checkResult, actualValue, expectedValue, executeDevicename);
+                            break;
+
+                        case "检查点_toast":
+                            try {
+                                WebDriverWait wait = new WebDriverWait(driver, maxWaitTime);// 最多等待时间由maxWaitTime指定
+                                wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//android.widget.Toast[1]")));
+
+                                WebElement toastView = driver.findElement(By.xpath("//android.widget.Toast[1]"));
+
+                                actualValue = toastView.getAttribute("name");
+                                expectedValue = value[5];
+                                checkResult = WarpingFunctions.verifyTest(actualValue, expectedValue);
+
                                 if ((checkResult == ""||checkResult == "fail")) {
                                     FileUtil.takeTakesScreenshot(driver);
                                     resultMessage = FileUtil.filePath;
