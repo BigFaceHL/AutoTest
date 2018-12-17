@@ -62,7 +62,7 @@ public class MultiThread implements  Runnable {
         int totalCaseNumbers;
         List<Object[]> records = new ArrayList<Object[]>();
         String testCaseResult = "";
-        test test1 = new test();
+        test configInfo = new test();
         try {
             test.testmethod();
         } catch (FileNotFoundException e1) {
@@ -72,8 +72,8 @@ public class MultiThread implements  Runnable {
         }
 
         File allTest, singleTest;
-        String result3 = test1.str3;// 读取环境配置信息：test.preperites
-        String result1 = test1.str1;
+        String result3 = configInfo.str3;// 读取环境配置信息：test.preperites
+        String result1 = configInfo.str1;
         allTest = new File(result3 + "测试用例集.xlsx");
         if (!allTest.exists()) {
             System.out.println("测试用例集文件不存在");
@@ -115,7 +115,7 @@ public class MultiThread implements  Runnable {
 //            capabilities.setCapability("resetKeyboard", "true");//个别手机因这两个配置会跑不起来
             capabilities.setCapability("noReset", "true");
             capabilities.setCapability("noSign", "true");
-            capabilities.setCapability("chromedriverExecutableDir", "C:\\Users\\Administrator\\AppData\\Roaming\\npm\\node_modules\\appium\\node_modules\\appium-chromedriver\\chromedriver\\win");
+            capabilities.setCapability("chromedriverExecutableDir", configInfo.str6);
             //运行时权限（自动接受所有的权限）
             capabilities.setCapability("autoGrantPermissions", "true");
             // 配置连接的设备信息(uiautomator2)
