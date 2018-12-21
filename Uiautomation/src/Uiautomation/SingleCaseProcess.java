@@ -8,6 +8,8 @@ import java.io.InputStream;
 import java.time.Duration;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -601,7 +603,17 @@ public class SingleCaseProcess {
                             try {
                                 int currentNumber;
                                 if (value[3].equals("点赞数")) {
-                                    currentNumber = Integer.parseInt(TD.getTestData("点赞数", executeDevicename)) + 1;
+                                    Pattern pattern = Pattern.compile("^[0-9]*$");
+                                    String dianzan=TD.getTestData("点赞数", executeDevicename);
+                                    Matcher isNum = pattern.matcher(dianzan);
+
+                                    if(!isNum.matches() ){
+                                        currentNumber = 1;
+                                        System.out.println("不匹配");
+                                    }else {
+                                        currentNumber = Integer.parseInt(dianzan) + 1;
+                                        System.out.println("匹配");
+                                    }
                                     TD.setTestData("点赞数", Integer.toString(currentNumber), executeDevicename);
                                 } else if (value[3].equals("回复数")) {
                                     currentNumber = Integer.parseInt(TD.getTestData("回复数", executeDevicename)) + 1;
