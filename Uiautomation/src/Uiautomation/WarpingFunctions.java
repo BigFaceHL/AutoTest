@@ -2,6 +2,8 @@ package Uiautomation;
 
 import java.awt.List;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -40,7 +42,6 @@ public class WarpingFunctions {
         profile.setPreference("browser.download.manager.useWindow", false);
         profile.setPreference("browser.download.manager.showAlertOnComplete", false);
         profile.setPreference("browser.download.manager.closeWhenDone", false);
-        System.out.println("heheh");
         return profile;
     }
 
@@ -79,23 +80,23 @@ public class WarpingFunctions {
             result = "pass";
         } else {
             Pattern pNum = Pattern.compile("[0-9]");
-            Pattern  pNotNum= Pattern.compile("[^0-9]");
+            Pattern pNotNum = Pattern.compile("[^0-9]");
 
             Matcher expctedMacther = pNum.matcher(expectedValue);
             Matcher pagesourceMacther = pNum.matcher(pageSourceString);
 
-            if (!pagesourceMacther.find()||!expctedMacther.find()) {
+            if (!pagesourceMacther.find() || !expctedMacther.find()) {
                 System.out.println("check failed");
                 result = "fail";
-                return  result;
+                return result;
             }
 
             expctedMacther = pNotNum.matcher(expectedValue);
             pagesourceMacther = pNotNum.matcher(pageSourceString);
 
-            if ( pagesourceMacther.replaceAll("").trim().contains(expctedMacther.replaceAll("").trim())){
+            if (pagesourceMacther.replaceAll("").trim().contains(expctedMacther.replaceAll("").trim())) {
                 result = "pass";
-                return  result;
+                return result;
             }
             result = "fail";
         }
@@ -160,14 +161,31 @@ public class WarpingFunctions {
         return result;
     }
 
+    static Map<String, Boolean> ifMap = new HashMap<String, Boolean>();
+
+
     // 判断该步骤是否需要执行。根据oprType与字段containedValue的关系，确定后续用例的步骤要否执行
-    public static boolean getIfCaseExec(AndroidDriver driver, String oprType, String containedValue, boolean orignalResult, String isMulti, String value) {
+    public static boolean getIfCaseExec(AndroidDriver driver, String oprType, String containedValue, boolean orignalResult, String isMulti, String elementValue, String key) {
         boolean stepExec = orignalResult; // 默认情况系下，所有用例都执行
         String totalText;
+        String parentKey = null;
+        String ifKey = null;
+
         if ((oprType.contains("if_") && !oprType.contains("else_if")) || (oprType.contains("IF_") && !oprType.contains("ELSE_IF"))) {
             // 如果value[0]中有文本包含的字样:
             // (1)若页面中包含字段containedValue，执行后续的用例步骤都，直到出现新的逻辑判断步骤包含在value【0】中
             // (2)若页面中不包含字段containedValue，则后续的用例步骤都不执行；直到出现新的逻辑判断步骤包含在value【0】中
+            if (key != null && !"".equals(key)) {
+                parentKey = "if" + (Integer.parseInt(key) - 1);
+                ifKey = "if" + (Integer.parseInt(key));
+                if (Integer.parseInt(key) - 1 > 0) {
+                    if (!ifMap.get(parentKey)) {
+                        stepExec = false;
+                        return stepExec;
+                    }
+                }
+            }
+
             if (oprType.contains("文本包含")) {
                 try {
                     totalText = driver.getPageSource();
@@ -195,8 +213,8 @@ public class WarpingFunctions {
                 } catch (Exception e) {
                     e.printStackTrace();
                     System.out.println(e.getMessage());
-                    // TODO: handle exception
                 }
+
 
             }
             // 如果value[0]中有文本不包含的字样:
@@ -225,45 +243,43 @@ public class WarpingFunctions {
                     stepExec = true;
                     ever_True = true;
                 }
-            }
-            else if (oprType.contains("页面包含xpath")) {
+            } else if (oprType.contains("页面包含xpath")) {
 
                 try {
                     WebDriverWait wait = new WebDriverWait(driver, 15);// 最多等待时间由maxWaitTime指定
 
                     if (isMulti.equals("")) {
-                        if (wait.until(ExpectedConditions.elementToBeClickable(By.xpath(value))) != null) {
+                        if (wait.until(ExpectedConditions.elementToBeClickable(By.xpath(elementValue))) != null) {
                             stepExec = true;
                             ever_True = true;
                             System.out.println("页面包括该内容：" + containedValue);
                         } else {
                             stepExec = false;
-                            System.out.println("页面包bu括该内容：" + containedValue);
+                            System.out.println("页面包不括该内容：" + containedValue);
                         }
 
                     } else {
-                        if (wait.until(ExpectedConditions.elementToBeClickable((WebElement) driver.findElements(By.xpath(value)))) != null) {
+                        if (wait.until(ExpectedConditions.elementToBeClickable((WebElement) driver.findElements(By.xpath(elementValue)))) != null) {
                             stepExec = true;
                             ever_True = true;
                             System.out.println("页面包括该内容：" + containedValue);
                         } else {
                             stepExec = false;
-                            System.out.println("页面包bu括该内容：" + containedValue);
+                            System.out.println("页面包不括该内容：" + containedValue);
                         }
                     }
 
                 } catch (Exception e) {
                     stepExec = false;
-                    System.out.println("页面包bu括该内容：" + containedValue);
+                    System.out.println("页面包不括该内容：" + containedValue);
                 }
-            }
-            else if (oprType.contains("页面包含id")) {
+            } else if (oprType.contains("页面包含id")) {
 
                 try {
                     WebDriverWait wait = new WebDriverWait(driver, 10);// 最多等待时间由maxWaitTime指定
 
                     if (isMulti.equals("")) {
-                        if (wait.until(ExpectedConditions.elementToBeClickable(By.id(value))) != null) {
+                        if (wait.until(ExpectedConditions.elementToBeClickable(By.id(elementValue))) != null) {
                             stepExec = true;
                             ever_True = true;
                             System.out.println("页面包括该内容：" + containedValue);
@@ -273,7 +289,7 @@ public class WarpingFunctions {
                         }
 
                     } else {
-                        if (wait.until(ExpectedConditions.elementToBeClickable((WebElement) driver.findElements(By.id(value)))) != null) {
+                        if (wait.until(ExpectedConditions.elementToBeClickable((WebElement) driver.findElements(By.id(elementValue)))) != null) {
                             stepExec = true;
                             ever_True = true;
                             System.out.println("页面包括该内容：" + containedValue);
@@ -285,9 +301,15 @@ public class WarpingFunctions {
 
                 } catch (Exception e) {
                     stepExec = false;
-                    System.out.println("页面包bu括该内容：" + containedValue);
+
+                    System.out.println("页面包不括该内容：" + containedValue);
                 }
             }
+
+            if (key != null && !"".equals(key)) {
+                ifMap.put(ifKey, stepExec);
+            }
+
         } else if (oprType.contains("else_if") || oprType.contains("ELSE_IF")) {
             // 如果之前已有步骤被执行，则else_if后续的步骤不再执行；
             if (ever_True == true) {
@@ -345,14 +367,34 @@ public class WarpingFunctions {
                     ever_True = true;
                 }
             }
+            //搜集执行结果
+            if (key != null && !"".equals(key)) {
+                ifMap.put(key, stepExec);
+            }
         }
         // 若value[0]为else，则如果之前的步骤不执行，之后的步骤执行；反之则相反；
         else if (oprType.equalsIgnoreCase("else")) {
+
+            if (key != null && !"".equals(key)) {
+                parentKey = "if" + (Integer.parseInt(key) - 1);
+                ifKey = "if" + (Integer.parseInt(key));
+
+                //判断是否属于内-判断执行结果
+                if (Integer.parseInt(key) - 1 > 0) {
+                    if (!ifMap.get(parentKey)) {
+                        stepExec = false;
+                        return stepExec;
+                    }
+                }
+                ever_True = ifMap.get(ifKey);
+            }
             if (ever_True == true) {
                 stepExec = false;
             } else {
                 stepExec = true;
             }
+
+
         }
         // 若value【0】为end，后续所有的步骤都执行
         else if (oprType.equalsIgnoreCase("end")) {
