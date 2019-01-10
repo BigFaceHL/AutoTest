@@ -219,7 +219,7 @@ public class TestGesture {
         List<WebElement> bot;
         String totalText = driver.getPageSource();  //滑动前获取pagesource
         TouchAction action = new TouchAction(driver);
-        while (!findZhangJie && counter < 30) { //如果找不到，最多找10遍
+        while (!findZhangJie && counter < 20) { //如果找不到，最多找10遍
             if (totalText.contains(actualparameter)) {
                 bot = driver.findElements(By.id(actualelement));
                 for (int i = 0; i < bot.size(); i++) {
