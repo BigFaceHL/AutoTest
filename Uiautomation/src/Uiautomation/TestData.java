@@ -16,6 +16,8 @@ import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.Hashtable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class TestData {
@@ -24,19 +26,20 @@ public class TestData {
     String getData; //返回的获取数据
     String appType = test.str12; //app类型，KJ，ZS与MHD分别对应开卷，追书与漫画岛3个项目
     boolean caseExist;
-    Hashtable<String, String> cells= new Hashtable<String, String>(); //存放列名与列号对应关系的哈希表
+    Hashtable<String, String> cells = new Hashtable<String, String>(); //存放列名与列号对应关系的哈希表
 
     IdCardGenerator g = new IdCardGenerator();
     test test1 = new test();
 
     /**
      * 获取执行用例文件的所在行数
+     *
      * @param caseName
      * @param devicesName
      */
     public void setNowNumber(String caseName, String devicesName) {
         String result2 = test1.str3;
-	String excelPath=result2+devicesName+"测试相关数据"+".xlsx";
+        String excelPath = result2 + devicesName + "测试相关数据" + ".xlsx";
 //        String excelPath = result2 + "测试相关数据" + ".xlsx";
         String value;
         File file = new File(excelPath);
@@ -77,7 +80,8 @@ public class TestData {
 
     /**
      * excel 读取数据
-     * @param dataType  列名
+     *
+     * @param dataType 列名
      * @param device   一个设备对应的一个文件
      * @return
      * @throws IOException
@@ -118,6 +122,7 @@ public class TestData {
 
     /**
      * 对比数据
+     *
      * @param dataType
      * @param device
      * @return
@@ -204,7 +209,8 @@ public class TestData {
         return acountedValue;
     }
 
-    /**计算购买章节时总的折扣数量
+    /**
+     * 计算购买章节时总的折扣数量
      *
      * @param totalOriginalCost
      * @param discountRate
@@ -223,6 +229,7 @@ public class TestData {
 
     /**
      * 计算购买章节时最后的折扣率
+     *
      * @param specialUserRate
      * @param nomalUserRate
      * @param device
@@ -259,8 +266,9 @@ public class TestData {
 
     /**
      * 计算折扣数量
-     * @param totalOrigCost  总价
-     * @param discountRate   折扣
+     *
+     * @param totalOrigCost 总价
+     * @param discountRate  折扣
      * @return
      * @throws IOException
      */
@@ -275,6 +283,7 @@ public class TestData {
 
     /**
      * 将所有的列号与列名的对应关系，放入一个哈希表，方便后续代码可以通过列名直接找到对应的列号信息
+     *
      * @param device 对应设备的文件
      * @throws IOException
      */
@@ -334,6 +343,7 @@ public class TestData {
 
     /**
      * 获取去除千分位格式后的数值，传入为带千分位格式的字符串，返回为不带千分位格式的int型数值
+     *
      * @param origValue
      * @return
      */
@@ -351,6 +361,7 @@ public class TestData {
 
     /**
      * 获取带千分位格式后的数值，传入为不带千分位格式的数值，返回为带千分位格式的字符串
+     *
      * @param origValue
      * @return
      */
@@ -392,6 +403,7 @@ public class TestData {
 
     /**
      * 传入要检查的余额类型，根据app的显示规则，返回要不要在页面上显示该字段信息的判断值
+     *
      * @param checkType
      * @param device
      * @return
@@ -428,6 +440,7 @@ public class TestData {
 
     /**
      * 向Excel插入数据
+     *
      * @param testDataType 列名字
      * @param readedText   内容
      * @param devices      一个设备对应的一个文件
@@ -468,7 +481,8 @@ public class TestData {
 
     /**
      * 追书购买章节计算，并将计算结果写入数据文件
-     * @param device   一个设备对应的一个文件
+     *
+     * @param device 一个设备对应的一个文件
      * @return
      */
     public String buyAccoutingZS(String device) {
@@ -479,46 +493,30 @@ public class TestData {
         int currentZhangJieHao, nextZhangJieHao;//本次要购买的起始章节号，下次要购买的其实章节号
         String zhangjieShu; //本次购买的章节数
         try {
-            ifShudouSupported = getTestData("追书_是否支持书豆", device);
-            origShubiAmount = Integer.parseInt(getTestData("追书_书币余额", device));
-            origShuQuanAmount = Integer.parseInt(getTestData("追书_书券余额", device));
-            origShudouAmount = Integer.parseInt(getTestData("追书_书豆余额", device));
+            Pattern pNotNum = Pattern.compile("[^0-9]");
+
+            String shubi = getTestData("追书_书币余额", device);
+            String shuquan = getTestData("追书_书券余额", device);
+
+            Matcher shubiInteger = pNotNum.matcher(shubi);
+            Matcher shuquanInteger = pNotNum.matcher(shuquan);
+
+            origShubiAmount = Integer.parseInt(shubiInteger.replaceAll("").trim());
+            origShuQuanAmount = Integer.parseInt(shuquanInteger.replaceAll("").trim());
             shifuAmount = Integer.parseInt(getTestData("章节总折后价", device));
-            if (ifShudouSupported.equals("本书不支持追书豆")) //如果不支持书豆，则通过书券与书币余额进行扣减
+
+            if (origShuQuanAmount >= shifuAmount) //如果书券金额大于实际购买金额，直接扣减书券
             {
-                if (origShuQuanAmount >= shifuAmount) //如果书券金额大于实际购买金额，直接扣减书券
-                {
-                    newShuQuanAmount = origShuQuanAmount - shifuAmount;
-                    setTestData("追书_书券余额", Integer.toString(newShuQuanAmount), device);
-                } else if ((origShuQuanAmount < shifuAmount) && ((origShuQuanAmount + origShubiAmount) >= shifuAmount)) //书券余额<如果实际购买金额<=（书券余额+书币余额），先将书券扣减到0，再扣减书币
-                {
-                    newShuQuanAmount = 0;
-                    setTestData("追书_书券余额", "0", device);
-                    newShubiAmount = origShuQuanAmount + origShubiAmount - shifuAmount;
-                    setTestData("追书_书币余额", Integer.toString(newShubiAmount), device);
-                } else {
-                    resultMessage = "余额不足购买";
-                }
-            } else //如果支持书豆，则通过书豆余额，书币余额与书券余额进行扣减
+                newShuQuanAmount = origShuQuanAmount - shifuAmount;
+                setTestData("追书_书券余额", Integer.toString(newShuQuanAmount), device);
+            } else if ((origShuQuanAmount < shifuAmount) && ((origShuQuanAmount + origShubiAmount) >= shifuAmount)) //书券余额<如果实际购买金额<=（书券余额+书币余额），先将书券扣减到0，再扣减书币
             {
-                if (origShudouAmount >= shifuAmount) {
-                    newShudouAmount = origShudouAmount - shifuAmount;
-                    setTestData("追书_书豆余额", Integer.toString(newShudouAmount), device);
-                } else if ((origShudouAmount + origShuQuanAmount) >= shifuAmount) {
-                    newShudouAmount = 0;
-                    setTestData("追书_书豆余额", "0", device);
-                    newShuQuanAmount = origShudouAmount + origShuQuanAmount - shifuAmount;
-                    setTestData("追书_书券余额", Integer.toString(newShuQuanAmount), device);
-                } else if ((origShudouAmount + origShuQuanAmount + origShubiAmount) >= shifuAmount) {
-                    newShudouAmount = 0;
-                    setTestData("追书_书豆余额", "0", device);
-                    newShuQuanAmount = 0;
-                    setTestData("追书_书券余额", "0", device);
-                    newShubiAmount = origShudouAmount + origShuQuanAmount + origShubiAmount - shifuAmount;
-                    setTestData("追书_书币余额", Integer.toString(newShubiAmount), device);
-                } else {
-                    resultMessage = "余额不足购买";
-                }
+                newShuQuanAmount = 0;
+                setTestData("追书_书券余额", "0", device);
+                newShubiAmount = origShuQuanAmount + origShubiAmount - shifuAmount;
+                setTestData("追书_书币余额", Integer.toString(newShubiAmount), device);
+            } else {
+                resultMessage = "余额不足购买";
             }
             //计算数据文件中下一个需要购买的章节号
             currentZhangJieHao = Integer.parseInt(getTestData("购买章节", device));
@@ -531,6 +529,7 @@ public class TestData {
             setTestData("购买章节", Integer.toString(nextZhangJieHao), device);
 
         } catch (Exception e) {
+            e.printStackTrace();
             resultMessage = e.getMessage();
         }
         return resultMessage;
@@ -538,7 +537,8 @@ public class TestData {
 
     /**
      * 开卷购买章节计算，并将计算结果写入数据文件
-     * @param device   一个设备对应的一个文件
+     *
+     * @param device 一个设备对应的一个文件
      * @return
      */
     public String buyAccoutingKJ(String device) {
@@ -602,7 +602,8 @@ public class TestData {
 
     /**
      * 漫画岛购买章节计算，并将计算结果写入数据文件
-     * @param device    一个设备对应的一个文件
+     *
+     * @param device 一个设备对应的一个文件
      * @return
      */
     public String buyAccoutingMHD(String device) {
