@@ -8,8 +8,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.ss.usermodel.Cell;
@@ -18,21 +16,8 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.junit.*;
-
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
-
-import org.openqa.selenium.*;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.support.ui.Select;
-
-import Uiautomation.ExcelOperation;
-import Uiautomation.DateUtil;
-import Uiautomation.test;
 
 public class AllCaseProcess {
-  private WebDriver driver;
   private String baseUrl;
   private boolean acceptNextAlert = true;
   private StringBuffer verificationErrors = new StringBuffer();
@@ -100,7 +85,7 @@ public void writeallHeader(String device) throws IOException{
 
 		 test1.testmethod();
 		 String result4= test1.str4;//获取测试报告的生成路径
-		 excelPath=result4+device+"-总体测试报告"+String.valueOf(DateUtil.getYear(eOP.date))+"-"+String.valueOf(DateUtil.getMonth(eOP.date))+"-"+String.valueOf(DateUtil.getDay(eOP.date))+"-"+String.valueOf(DateUtil.getHour(eOP.date))+"-"+String.valueOf(DateUtil.getMinute(eOP.date))+".xlsx";	
+		 excelPath=result4+device+"-总体测试报告"+String.valueOf(DateUtil.getYear(eOP.date))+"-"+String.valueOf(DateUtil.getMonth(eOP.date))+"-"+String.valueOf(DateUtil.getDay(eOP.date))+"-"+String.valueOf(DateUtil.getHour(eOP.date))+"-"+String.valueOf(DateUtil.getMinute(eOP.date))+".xlsx";
 		Workbook workbook = new XSSFWorkbook();
 		Sheet sheet = workbook.createSheet("testdata1");
 		FileOutputStream outputStream = new FileOutputStream(excelPath);
