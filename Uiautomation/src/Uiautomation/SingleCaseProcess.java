@@ -32,10 +32,10 @@ public class SingleCaseProcess {
     public static boolean a = true;
     boolean stepExec = true;
     public int caseSequence, maxWaitTime = 15;
-    String resultMessage = new String(""); // 非检查点的步骤，写入测试报告时，保存错误信息
-    String checkResult = new String(""); // 检查点步骤，写入测试报告时，保存检查结果
-    String actualValue = new String("");//检查点步骤，元素取到的实际值
-    String expectedValue = new String(""); // 检查点步骤，期待值
+    String resultMessage = null; // 非检查点的步骤，写入测试报告时，保存错误信息
+    String checkResult = null; // 检查点步骤，写入测试报告时，保存检查结果
+    String actualValue = null;//检查点步骤，元素取到的实际值
+    String expectedValue = null; // 检查点步骤，期待值
     String caseExecResult = "Pass";//用例执行结果
     String phoneNumber, cardNumber, idNumber, readedText, testDataType, totalText;
     String appType; // app项目名称
@@ -91,15 +91,15 @@ public class SingleCaseProcess {
                     value[j] = row.getCell(j).getStringCellValue().trim();// 操作类型
                 }
                 try {
-                    stepExec = WarpingFunctions.getIfCaseExec(driver, value[0], value[3], stepExec, value[2], value[1]); // 判断该步骤是否需要执行。
+                    stepExec = WarpingFunctions.getIfCaseExec(driver, value[0], value[3], stepExec, value[2], value[1],value[5]); // 判断该步骤是否需要执行。
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
                 }
-                if ((stepExec == false )) // 如果不需要执行，直接打印该步骤的日志
+                if ((stepExec == false)) // 如果不需要执行，直接打印该步骤的日志
                 {
 
                     resultMessage = "条件不成立该步骤不执行";
-                    System.out.println("设备：" + executeDevicename + ": 用例编号" + (i + 1) + resultMessage + "\r");
+                    System.out.println("设备" + executeDevicename + ": 用例编号" + (i + 1) + resultMessage + "\r");
                     excel.writeResult(value[4], resultMessage, executeDevicename);// 写入单个测试用例单个步骤的执行结果
 
                 } else // 否则清空错误日志，用例步骤顺序执行
@@ -205,9 +205,9 @@ public class SingleCaseProcess {
                                     direction = "down";
                                 }
                                 if (value[3].equals("")) {
-                                    tmpReadedText = "第" + value[5]; // 如果未传入取值类型，需要在value[5]中直接传入要点击的章节，否则，从测试数据文件中读取要点击的章节。
+                                    tmpReadedText = value[5]; // 如果未传入取值类型，需要在value[5]中直接传入要点击的章节，否则，从测试数据文件中读取要点击的章节。
                                 } else {
-                                    tmpReadedText = "第" + TD.getTestData(value[3], executeDevicename); // 要点击的内容为，包含"第"+章节号的文本内容
+                                    tmpReadedText = TD.getTestData(value[3], executeDevicename); // 要点击的内容为，包含"第"+章节号的文本内容
                                 }
 
                                 WebDriverWait wait = new WebDriverWait(driver, maxWaitTime);// 最多等待时间由maxWaitTime指定
@@ -604,13 +604,13 @@ public class SingleCaseProcess {
                                 int currentNumber;
                                 if (value[3].equals("点赞数")) {
                                     Pattern pattern = Pattern.compile("^[0-9]*$");
-                                    String dianzan=TD.getTestData("点赞数", executeDevicename);
+                                    String dianzan = TD.getTestData("点赞数", executeDevicename);
                                     Matcher isNum = pattern.matcher(dianzan);
 
-                                    if(!isNum.matches() ){
+                                    if (!isNum.matches()) {
                                         currentNumber = 1;
                                         System.out.println("不匹配");
-                                    }else {
+                                    } else {
                                         currentNumber = Integer.parseInt(dianzan) + 1;
                                         System.out.println("匹配");
                                     }
@@ -784,8 +784,8 @@ public class SingleCaseProcess {
                                 } else {
                                     checkedText = TD.getTestData(value[3], executeDevicename);
                                 }
-                                actualValue = "";
-                                expectedValue = ""; // 默认情况下，假定校验成功，在期望结果与实际结果一样
+                                actualValue = checkedText;
+                                expectedValue = checkedText; // 默认情况下，假定校验成功，在期望结果与实际结果一样
                                 int count = 0;
                                 while ((checkResult == "" || checkResult == "fail") && count < 2) {
                                     pageSourceString = driver.getPageSource(); // 获取页面pagesource
@@ -798,6 +798,7 @@ public class SingleCaseProcess {
                                     resultMessage = FileUtil.filePath;
                                     caseExecResult = "fail";
                                     actualValue = checkedText;
+                                    expectedValue = pageSourceString;
                                 }
                             } catch (Exception e) {
                                 resultMessage = e.getMessage();
@@ -827,7 +828,6 @@ public class SingleCaseProcess {
 
                                 actualValue = smallText;
                                 expectedValue = smallText; // 默认情况下，假定校验成功，在期望结果与实际结果一样
-
                                 checkResult = WarpingFunctions.verifyContainTest(bigText, smallText, "y");
                                 if ((checkResult == "" || checkResult == "fail")) {
                                     FileUtil.takeTakesScreenshot(driver);
